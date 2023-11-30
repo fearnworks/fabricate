@@ -1,6 +1,8 @@
 
 # Fabricate: AI Driver Synthetic Data Management
 
+![Fabricate Splash](static/fabricate.png)
+
 Fabricate is a Vue.js and FastAPI-based application focused on managing and annotating synthetic datasets for AI development. 
 
 It streamlines the process of sorting, labeling, and manipulating images, catering to the needs of AI model training and synthetic data management.
