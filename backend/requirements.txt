@@ -1,0 +1,5 @@
+fastapi
+pyyaml
+python-multipart
+uvicorn[standard]
+watchdog
