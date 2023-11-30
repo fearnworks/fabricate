@@ -1,5 +1,6 @@
 import asyncio
 from fastapi import APIRouter, HTTPException, WebSocket
+from websockets.exceptions import ConnectionClosedOK
 from starlette.websockets import WebSocketDisconnect
 from typing import List
 from models.image_model import ImageModel, ImageList
@@ -39,8 +40,11 @@ async def image_ws(websocket: WebSocket):
         while True:
             # Send the updated list of images to the client
             images = read_images()
-            await websocket.send_json({"images": [image.dict() for image in images]})
+            await websocket.send_json({"images": [image.model_dump() for image in images]})
             # Then sleep for some time (e.g., 5 seconds) before sending the next update
             await asyncio.sleep(5)
+    except ConnectionClosedOK:
+        logger.info("Connection closed normally")
     except WebSocketDisconnect:
         print("Client disconnected from WebSocket.")
+

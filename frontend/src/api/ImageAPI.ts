@@ -1,37 +1,51 @@
 import axios, { AxiosInstance } from 'axios';
 
+interface ImageData {
+  filename: string;
+  tags?: string[];
+  notes?: string;
+  captions?: string;
+}
+
 class ImageAPI {
   private axiosInstance: AxiosInstance;
 
   constructor(baseURL: string) {
-    this.axiosInstance = axios.create({
-      baseURL: baseURL,
-    });
+    this.axiosInstance = axios.create({ baseURL });
   }
 
-  async fetchImages(): Promise<any> { // Specify the return type if known
+  async fetchImages(): Promise<any> {
     try {
       const response = await this.axiosInstance.get('/images');
+      console.log(response)
       return response.data;
     } catch (error) {
-      // Handle or rethrow the error appropriately
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }
 
-  async deleteImage(filename: string): Promise<any> { // Specify the return type if known
+  async deleteImage(filename: string): Promise<any> {
     try {
       const response = await this.axiosInstance.delete(`/delete-image/${filename}`);
       return response.data;
     } catch (error) {
-      console.log(error);
-      // Handle or rethrow the error appropriately
+      console.error(error);
       throw error;
     }
   }
 
-  // Additional methods for other CRUD operations can be added here
+  async updateImage(filename: string, updateData: ImageData): Promise<any> {
+    try {
+      const response = await this.axiosInstance.patch(`/update-image/${filename}`, updateData);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  // Further methods can be added as needed
 }
 
 export default ImageAPI;

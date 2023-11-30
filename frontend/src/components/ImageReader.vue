@@ -16,7 +16,7 @@
         </div>
 
         <div v-if="images.length > 0">
-            <ImageCarousel :imageUrls="imageUrls" @delete-image="handleDelete" />
+            <ImageCarousel :images="images" @delete-image="handleDelete" />
 
         </div>
         <div v-else>
@@ -29,9 +29,9 @@
 </template>
   
 <script lang="ts">
-import { defineComponent } from 'vue';
-import ImageCarousel from './ImageCarousel.vue' // Import ImageCarousel
-import ImageAPI from '@/api/ImageAPI'; // Import the API handler
+import { defineComponent} from 'vue';
+import ImageCarousel from './ImageCarousel.vue';
+import ImageAPI from '@/api/ImageAPI';
 import { ToastMethods } from '@/types';
 
 export default defineComponent({
@@ -40,17 +40,18 @@ export default defineComponent({
     },
     name: 'ImageReader',
     components: {
-        ImageCarousel // Register ImageCarousel
+        ImageCarousel
     },
     data() {
         return {
-            images: [], // This will be populated via WebSocket
+            images: [],
             currentPage: 1,
             imagesPerPage: 10,
             socket: null as WebSocket | null,
         };
     },
     mounted() {
+        this.fetchImages();
         this.connectWebSocket();
     },
     computed: {
@@ -68,8 +69,6 @@ export default defineComponent({
     },
     methods: {
         getImageUrl(filename: string) {
-            console.log('Getting image URL for:', filename)
-            // Directly use the filename to construct the URL
             const url = `http://localhost:8000/static/${filename}`;
             return url;
         },
@@ -83,9 +82,6 @@ export default defineComponent({
         nextPage() {
             if (this.currentPage < this.totalPages) this.currentPage++;
         },
-        // Placeholder methods for CRUD operations
-        uploadImage() { /* ... */ },
-        updateImage() { /* ... */ },
         async handleDelete(filename: string) {
             const api = new ImageAPI('http://localhost:8000');
             try {
@@ -97,7 +93,28 @@ export default defineComponent({
                 (this.showToast as ToastMethods['showToast'])('Error deleting image');
             }
         },
-
+        async fetchImages() {
+            const api = new ImageAPI('http://localhost:8000');
+            try {
+                const fetchedImages = await api.fetchImages();
+                this.images = fetchedImages;
+                (this.showToast as ToastMethods['showToast'])('Fetched images successfully');
+            } catch (error) {
+                console.error('Error fetching images:', error);
+                (this.showToast as ToastMethods['showToast'])('Error fetching images');
+            }
+        },
+        async handleUpdate(filename: string, updateData: any) {
+            const api = new ImageAPI('http://localhost:8000');
+            try {
+                await api.updateImage(filename, updateData);
+                // Update the images array or re-fetch the images
+                (this.showToast as ToastMethods['showToast'])('Image updated successfully');
+            } catch (error: any) {
+                console.error('Error updating image:', error);
+                (this.showToast as ToastMethods['showToast'])('Error updating image');
+            }
+        },
         connectWebSocket() {
             this.socket = new WebSocket('ws://localhost:8000/ws');
             this.socket.onmessage = (event: MessageEvent) => {

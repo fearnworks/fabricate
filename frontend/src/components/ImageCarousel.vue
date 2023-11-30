@@ -1,9 +1,14 @@
 <template>
   <div @wheel="handleWheel" class="carousel-container">
-    <Carousel ref="carousel" :itemsToShow="5" :mouseDrag="true" :touchDrag="true">
-      <Slide v-for="(imageSrc, index) in imageUrls" :key="index">
-        <ImageCard :src="imageSrc" :filename="extractFilename(imageSrc)"
-          @delete="$emit('delete-image', extractFilename(imageSrc))" />
+    <Carousel ref="carousel" :itemsToShow="3" :mouseDrag="true" :touchDrag="true">
+      <Slide v-for="(image) in images" :key="image.filename">
+        <ImageCard
+          :src="image.src"
+          :filename="image.filename"
+          :tags="image.tags"
+          :notes="image.notes"
+          :captions="image.captions"
+          @delete="$emit('delete-image', image.filename)" />
       </Slide>
     </Carousel>
     <div class="flex justify-center mt-4">
@@ -19,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Carousel, Slide } from 'vue3-carousel';
 import { ref } from 'vue';
 import ImageCard from './ImageCard.vue';
@@ -32,15 +37,12 @@ export default {
     ImageCard,
   },
   props: {
-    imageUrls: Array,
-  },
-  setup() {
-    // Carousel setup logic here (if needed)
+    images: Array,
   },
   data() {
     return {
       carousel: ref(null),
-      isThrottled: false, // Prevent too many rapid scroll events
+      isThrottled: false,
     };
   },
   methods: {
@@ -51,37 +53,26 @@ export default {
       this.carousel.prev();
     },
     handleWheel(event) {
-      // Use a simple throttle mechanism to prevent too many rapid invocations
       if (!this.isThrottled) {
         this.isThrottled = true;
-        setTimeout(() => {
-          this.isThrottled = false;
-        }, 200);
-
-        if (event.deltaY > 0) {
-          this.next();
-        } else {
-          this.prev();
-        }
+        setTimeout(() => this.isThrottled = false, 200);
+        event.deltaY > 0 ? this.next() : this.prev();
       }
     },
-    extractFilename(url) {
-      // Extracts the filename from the URL
-      const urlSegments = url.split('/');
-      return urlSegments[urlSegments.length - 1] || 'No filename';
-    },
   },
-  // The 'mounted' hook can be used to perform actions once the component is mounted.
-  // If you need to access the carousel's data properties or call its methods,
-  // you can do so here since the carousel will be fully initialized at this point.
   mounted() {
-    // Make sure the carousel is assigned after component is mounted
     this.carousel = this.$refs.carousel;
+  },
+  watch: {
+    images(newImages) {
+      console.log('Received new images from parent:', newImages);
+    },
   },
 };
 </script>
 
 <style scoped>
 .carousel-container {
-  /* styles if needed */
-}</style>
+  /* Add styles here */
+}
+</style>
