@@ -9,7 +9,7 @@
 import { defineComponent, ref, provide } from 'vue';
 import ImageReader from './components/ImageReader.vue' // Import ImageReader
 import ToastComponent from './components/ToastComponent.vue' // Import ToastComponent
-import { ToastMethods } from '@/types'; // Import the type
+import { ToastMethods } from  './types'; // Import the type
 
 export default defineComponent({
   name: 'App',
