@@ -42,6 +42,11 @@ export default defineComponent({
     components: {
         ImageCarousel
     },
+    provide() {
+        return {
+            handleUpdate: this.handleUpdate
+        };
+    },
     data() {
         return {
             images: [],
@@ -106,6 +111,7 @@ export default defineComponent({
         },
         async handleUpdate(filename: string, updateData: any) {
             const api = new ImageAPI('http://localhost:8000');
+            console.log('Updating image:', filename, updateData)
             try {
                 await api.updateImage(filename, updateData);
                 // Update the images array or re-fetch the images

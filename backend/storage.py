@@ -29,9 +29,24 @@ def read_images() -> List[ImageModel]:
     return images
 
 def save_metadata(image: ImageModel):
-    # Append new metadata to the JSONL file
-    with open(metadata_file_path, 'a') as file:
-        file.write(json.dumps(image.dict(), ensure_ascii=False) + '\n')
+    # Read all metadata from the JSONL file
+    with open(metadata_file_path, 'r') as file:
+        lines = file.readlines()
+
+    # Parse the JSON data and find the entry to update
+    for i, line in enumerate(lines):
+        data = json.loads(line)
+        if data['filename'] == image.filename:
+            # Update the entry
+            lines[i] = json.dumps(image.model_dump(), ensure_ascii=False) + '\n'
+            break
+    else:
+        # If no entry was found to update, append a new one
+        lines.append(json.dumps(image.model_dump(), ensure_ascii=False) + '\n')
+
+    # Write the updated metadata back to the JSONL file
+    with open(metadata_file_path, 'w') as file:
+        file.writelines(lines)
 
 def delete_image_file(filename: str):
     # Read all the metadata

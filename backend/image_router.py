@@ -24,6 +24,7 @@ async def upload_image(image: ImageModel):
 async def update_image(filename: str, update_data: ImageModel):
     # Update metadata for an existing image
     # This can include renaming the file, changing tags, etc.
+    logger.info(update_data)
     save_metadata(update_data)
     return {"message": f"Image {filename} metadata updated."}
 
