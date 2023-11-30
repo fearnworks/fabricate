@@ -1,3 +1,5 @@
 # config.yaml
 
 image_directory: '/mnt/e/dungeondriver/ui_test/dndset_1/data'
+metadata_directory: '/mnt/e/dungeondriver/ui_test/'
+model_directory: '/mnt/e/dungeondriver/'

@@ -3,3 +3,5 @@ pyyaml
 python-multipart
 uvicorn[standard]
 watchdog
+rich
+loguru
