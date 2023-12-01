@@ -7,42 +7,30 @@ interface ImageData {
   captions?: string;
 }
 
-class ImageAPI {
+interface ImageAPIInterface {
+  fetchImages: () => Promise<ImageData[]>;
+  deleteImage: (filename: string) => Promise<void>;
+  updateImage: (filename: string, updateData: ImageData) => Promise<void>;
+}
+
+class ImageAPI implements ImageAPIInterface {
   private axiosInstance: AxiosInstance;
 
-  constructor(baseURL: string) {
-    this.axiosInstance = axios.create({ baseURL });
+  constructor(baseURL: string, axiosInstance?: AxiosInstance) {
+    this.axiosInstance = axiosInstance || axios.create({ baseURL });
   }
 
-  async fetchImages(): Promise<any> {
-    try {
-      const response = await this.axiosInstance.get('/images');
-      console.log(response)
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  async fetchImages(): Promise<ImageData[]> {
+    const response = await this.axiosInstance.get<ImageData[]>('/images');
+    return response.data;
   }
 
-  async deleteImage(filename: string): Promise<any> {
-    try {
-      const response = await this.axiosInstance.delete(`/delete-image/${filename}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  async deleteImage(filename: string): Promise<void> {
+    await this.axiosInstance.delete(`/delete-image/${filename}`);
   }
 
-  async updateImage(filename: string, updateData: ImageData): Promise<any> {
-    try {
-      const response = await this.axiosInstance.patch(`/update-image/${filename}`, updateData);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  async updateImage(filename: string, updateData: ImageData): Promise<void> {
+    await this.axiosInstance.patch(`/update-image/${filename}`, updateData);
   }
 
   // Further methods can be added as needed

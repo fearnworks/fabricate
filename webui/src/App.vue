@@ -1,15 +1,15 @@
 <template>
-  <div id="app">
-    <ToastComponent ref="toast" />
-    <ImageReader /> <!-- Add the ImageReader component -->
+  <div id="app" >
+    <ToastComponent />
+    <ImageReader class="bg-slate-600"/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, provide } from 'vue';
-import ImageReader from './components/ImageReader.vue' // Import ImageReader
-import ToastComponent from './components/ToastComponent.vue' // Import ToastComponent
-import { ToastMethods } from  './types'; // Import the type
+import { defineComponent, provide } from 'vue';
+import ImageReader from './components/ImageReader.vue';
+import ToastComponent from './components/ToastComponent.vue';
+import useToast from '@/composables/useToast'; 
 
 export default defineComponent({
   name: 'App',
@@ -18,29 +18,20 @@ export default defineComponent({
     ToastComponent
   },
   setup() {
-    const toast = ref<ToastMethods | null>(null);
+    const { showToast } = useToast();
 
-    const showToast: ToastMethods['showToast'] = (message) => {
-      toast.value?.showToast(message);
-    };
-
+    // Provide the showToast method to all child components
     provide('showToast', showToast);
-
-    return {
-      toast
-    };
   }
-})
+});
 </script>
 
-
 <style>
-html,
-body {
+/* Keep global styles if necessary, but consider scoping them */
+html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  /* Prevent scrolling on the entire body */
 }
 
 #app {
@@ -49,7 +40,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   height: 100vh;
-  /* Set the app height to the viewport height */
   display: flex;
   flex-direction: column;
-}</style>
+}
+</style>

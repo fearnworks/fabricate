@@ -1,7 +1,7 @@
 // tests/ImageCard.test.ts
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, fireEvent, screen } from '@testing-library/vue';
-import ImageCard from '@/components/ImageCard.vue';
+import ImageCard from '@/components/ImageCard.vue' 
 
 describe('ImageCard', () => {
   it('emits delete event when delete button is clicked', async () => {
