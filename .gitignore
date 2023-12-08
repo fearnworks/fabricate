@@ -7,3 +7,5 @@ logs
 *.log
 sandbox
 ./backend/BakLLaVA
+.venv
+wandb

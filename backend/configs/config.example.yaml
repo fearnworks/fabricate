@@ -1,0 +1,5 @@
+# config.yaml
+
+image_directory: '../data'
+metadata_directory: '../data'
+model_directory: '/path/to/your/model/storage'

@@ -10,7 +10,7 @@ class ImageModel(BaseModel):
     captions: Optional[str] = Field(default=None, description="Caption for the image")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "filename": "image1.jpg",
                 "tags": ["tag1", "tag2"],

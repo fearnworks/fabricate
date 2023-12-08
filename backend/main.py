@@ -12,6 +12,10 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from rich.console import Console
 from rich.logging import RichHandler
+import lifecycle as lifecycle
+
+import argparse 
+from config import load_config
 from image_router import router as image_router
 
 # Create a console instance
@@ -20,11 +24,14 @@ console = Console()
 logger.remove()
 logger.add(RichHandler())
 
-
-# Load configuration
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Fabricate AI Driver Synthetic Data Management")
+    parser.add_argument("--config", type=str, default="./configs/local/config.yaml", help="Path to the configuration file")
+    
+    return parser.parse_args()# Load configuration
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
-
+    
 app = FastAPI(title="AI Driver API")
 
 origins = ["*"]
@@ -48,6 +55,7 @@ app.add_middleware(
     allow_methods=["*"],  # This allows all methods, including DELETE
     allow_headers=["*"],
 )
+args = parse_arguments()
 
 # Mount the static directory specified in the config file
 app.mount("/static", StaticFiles(directory=config["image_directory"]), name="static")
@@ -90,7 +98,8 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 logger.info("Routers have been included in the application")
-
+app.add_event_handler("startup", lifecycle.startup)
+app.add_event_handler("shutdown", lifecycle.shutdown)
 if __name__ == "__main__":
     import uvicorn
 

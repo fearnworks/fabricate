@@ -87,6 +87,24 @@ def initialize_storage():
             # Save the new image metadata to the storage file
             save_metadata(new_image)
 
+def fetch_image(filename: str) -> ImageModel:
+    """
+    Fetch metadata for a single image.
+
+    Args:
+        filename: The filename of the image to fetch.
+
+    Returns:
+        An ImageModel instance for the specified image.
+    """
+    logger.info(f"Fetching image {filename}")
+    images = read_images()
+    for image in images:
+        logger.info(image)
+        if image.filename == filename:
+            return image
+    raise FileNotFoundError(f"Image with filename {filename} not found")
+
 # Call initialize_storage when your application starts
 initialize_storage()
 initialize_metadata_file()

@@ -1,19 +1,43 @@
 <template>
-    <div class="flex flex-col p-8 bg-gray-900 rounded-3xl shadow-xl max-w mx-auto transition duration-300 ease-in-out transform hover:shadow-2xl" data-testid="image-card">
-      <div class="flex flex-row mb-8">
-        <div class="flex-none w-96 h-96 bg-black p-4 rounded-3xl mr-8">
-          <img :src="get_src(filename)" alt="Image" class="object-cover rounded-2xl" />
-        </div>
-        <div class="flex-grow space-y-6">
+  <div>
+    <div
+      class="flex flex-row gap-4 p-8 bg-gray-900 rounded-3xl shadow-xl transition duration-300 ease-in-out hover:shadow-2xl w-full "
+      data-testid="image-card">
+      <!-- Image Container -->
+      <div class="relative group w-1/2">
+        <img :src="get_src(filename)" alt="Image" class="object-cover rounded-2xl w-full h-auto" />
+        <button
+          class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl"
+          @click="showZoomed = true">
+          Zoom
+        </button>
+      </div>
+
+      <!-- Form Container -->
+      <div class="space-y-6 w-1/2 ">
+        <!-- Filename and Caption -->
+        <div>
+          <label class="block text-sm font-medium text-gray-400">Filename</label>
           <input type="text" v-model="editableFilename"
-            class="form-input w-full text-2xl font-semibold bg-transparent border-b-2 border-gray-500 focus:outline-none text-white" />
+            class="form-input w-full text-xl font-semibold bg-transparent border-b-2 border-gray-500 focus:outline-none text-white"
+            readonly />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400">Caption</label>
           <textarea v-model="editableCaptions"
-            class="form-textarea w-full bg-transparent border-b-2 border-gray-500 focus:outline-none text-white placeholder-gray-400"></textarea>
+            class="form-textarea w-full h-24 bg-transparent border-b-2 border-gray-500 focus:outline-none text-white placeholder-gray-400 resize-none"></textarea>
+        </div>
+        <div>
+          <!-- Notes -->
+          <label class="block text-sm font-medium text-gray-400">Notes</label>
+          <textarea v-model="editableNotes"
+            class="form-textarea w-full h-24 bg-transparent border-b-2 border-gray-500 focus:outline-none text-white placeholder-gray-400 resize-none"></textarea>
         </div>
       </div>
-      <textarea v-model="editableNotes"
-        class="form-textarea w-full mb-8 bg-transparent border-b-2 border-gray-500 focus:outline-none text-white placeholder-gray-400"></textarea>
-      <div class="flex justify-between mt-4 bg-gray-800 p-4 rounded-b-3xl">
+    </div>
+    <div>
+      <!-- Action buttons -->
+      <div class="flex justify-between mt-8 bg-gray-800 p-4 rounded-b-3xl">
         <button @click="emitUpdate"
           class="px-6 py-3 text-lg bg-slate-700 rounded-lg hover:bg-blue-800 focus:outline-none text-white transition duration-300">
           Update
@@ -28,57 +52,94 @@
         </button>
       </div>
     </div>
-  </template>
+  </div>
+
+  <!-- Zoomed Image Modal -->
+  <div v-if="showZoomed" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 z-50"
+    @click.self="showZoomed = false">
+    <div class="modal-content" @click.stop>
+      <img :src="get_src(filename)" alt="Zoomed Image" class="max-w-full max-h-full" style="transform: scale(1);" />
+    </div>
+  </div>
+</template>
+
   
   
   
-  <script setup lang="ts">
-  import { ref, watch, inject } from 'vue';
-  import type { Image } from '@/types'; // Assuming Image type is defined in types.ts
-  
-  const props = defineProps({
-    filename: String,
-    tags: Array,
-    notes: String,
-    captions: String
+<script setup lang="ts">
+import { ref, watch, inject } from 'vue';
+import type { Image } from '@/types'; // Assuming Image type is defined in types.ts
+
+const props = defineProps({
+  filename: String,
+  tags: Array,
+  notes: String,
+  captions: String
+});
+
+const emit = defineEmits(['update', 'delete']);
+
+const handleUpdate = inject('handleUpdate') as (filename: string, data: any) => void;
+
+const editableFilename = ref(props.filename);
+const editableNotes = ref(props.notes);
+const editableCaptions = ref(props.captions);
+const showZoomed = ref(false);
+
+
+const zoomLevel = ref(1); // 1 is the initial zoom level (100%)
+
+const zoomIn = () => {
+  zoomLevel.value *= 1.2; // Increase zoom by 20%
+};
+
+const zoomOut = () => {
+  zoomLevel.value = Math.max(1, zoomLevel.value / 1.2); // Decrease zoom by 20%, but not less than 100%
+};
+
+watch(() => props.filename, (newVal) => editableFilename.value = newVal);
+watch(() => props.notes, (newVal) => editableNotes.value = newVal);
+watch(() => props.captions, (newVal) => editableCaptions.value = newVal);
+
+const emitUpdate = () => {
+  handleUpdate(editableFilename.value, {
+    filename: editableFilename.value,
+    notes: editableNotes.value,
+    captions: editableCaptions.value,
+    tags: props.tags
   });
-  
-  const emit = defineEmits(['update', 'delete']);
-  
-  const handleUpdate = inject('handleUpdate') as (filename: string, data: any) => void;
-  
-  const editableFilename = ref(props.filename);
-  const editableNotes = ref(props.notes);
-  const editableCaptions = ref(props.captions);
-  
-  watch(() => props.filename, (newVal) => editableFilename.value = newVal);
-  watch(() => props.notes, (newVal) => editableNotes.value = newVal);
-  watch(() => props.captions, (newVal) => editableCaptions.value = newVal);
-  
-  const emitUpdate = () => {
-    handleUpdate(editableFilename.value, {
-      filename: editableFilename.value,
-      notes: editableNotes.value,
-      captions: editableCaptions.value,
-      tags: props.tags
-    });
-  };
-  
-  const emitDelete = () => emit('delete', props.filename);
-  
-  const moveImage = () => console.log('Move image:', props.filename);
-  
-  const get_src = (filename: string) => `http://localhost:8000/static/${filename}`;
-  </script>
+};
+
+const emitDelete = () => emit('delete', props.filename);
+
+const moveImage = () => console.log('Move image:', props.filename);
+
+const get_src = (filename: string) => `http://localhost:8000/static/${filename}`;
+</script>
   
 
 <style scoped>
 /* Styles for ImageCard */
 .tags {
-    /* Styles for tags */
+  /* Styles for tags */
 }
 
 .tag {
-    /* Individual tag styles */
+  /* Individual tag styles */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 </style>
