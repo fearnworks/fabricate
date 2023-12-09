@@ -4,12 +4,15 @@ from pydantic import BaseModel, Field
 
 
 class ImageModel(BaseModel):
+    """ Image Model
+    """
     filename: str = Field(..., description="The name of the image file")
     tags: Optional[List[str]] = Field(default=[], description="Tags associated with the image")
     notes: Optional[str] = Field(default=None, description="Additional notes or comments")
     captions: Optional[str] = Field(default=None, description="Caption for the image")
 
     class Config:
+        """ Configuration for the model"""
         json_schema_extra = {
             "example": {
                 "filename": "image1.jpg",
@@ -20,4 +23,5 @@ class ImageModel(BaseModel):
         }
 
 class ImageList(BaseModel):
+    """ Image List Model """
     images: list
