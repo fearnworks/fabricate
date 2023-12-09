@@ -1,28 +1,24 @@
 <template>
     <div class="grid-container">
-        <div v-for="(image, index) in images" :key="index" class="grid-item">
-            <img :src="getImageUrl(image.filename)" :alt="image.filename" @click="showModal(image)" />
+        <div v-for="(image, index) in images" :key="index">
+            <img :src="image.path" :alt="image.path" @click="showModal(image)" :data-testid="`image-${index}`" />
         </div>
         <ImageModal v-if="selectedImage" :image="selectedImage" @close="selectedImage = null" />
     </div>
 </template>
   
-
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import ImageModal from './ImageModal.vue';
-import { Image, createImageListProps } from '@/types';
+import { DBImageData } from '@/types';
 
-const props = createImageListProps();
-const images = ref(props.images);
-const selectedImage = ref<Image | null>(null);
+defineProps<{
+    images: DBImageData[]
+}>();
 
-function getImageUrl(filename: string) {
-    return `http://server:28100/static/${filename}`;
-}
+const selectedImage = ref<DBImageData | null>(null);
 
-function showModal(image: Image) {
+function showModal(image: DBImageData) {
     selectedImage.value = image;
 }
 </script>

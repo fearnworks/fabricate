@@ -5,7 +5,7 @@
       data-testid="image-card">
       <!-- Image Container -->
       <div class="relative group w-1/2">
-        <img :src="get_src(editableFilename)" alt="Image" class="object-cover rounded-2xl w-full h-auto" />
+        <img :src="path" alt="Image" class="object-cover rounded-2xl w-full h-auto" />
 
         <button
           class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl"
@@ -59,17 +59,15 @@
   <div v-if="showZoomed" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 z-50"
     @click.self="showZoomed = false">
     <div class="modal-content" @click.stop>
-      <img :src="get_src(editableFilename)" alt="Zoomed Image" class="max-w-full max-h-full" style="transform: scale(1);" />
+      <img :src="path" alt="Zoomed Image" class="max-w-full max-h-full" style="transform: scale(1);" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, inject } from 'vue';
-import { createImageProps } from '@/types'; // Assuming Image type is defined in types.ts
-
-const props = createImageProps();
-
+import { DBImageData } from '@/types'; // Assuming Image type is defined in types.ts
+const props = defineProps<DBImageData>();
 
 const emit = defineEmits(['update', 'delete']);
 
@@ -78,6 +76,7 @@ const handleUpdate = inject('handleUpdate') as (filename: string, data: any) => 
 const editableFilename = ref(props.filename);
 const editableNotes = ref(props.notes);
 const editableCaptions = ref(props.captions);
+const path = ref(props.path);
 const showZoomed = ref(false);
 
 watch(() => props.filename, (newVal) => editableFilename.value = newVal);
@@ -101,7 +100,6 @@ const emitDelete = () => emit('delete', props.filename);
 
 const moveImage = () => console.log('Move image:', props.filename);
 
-const get_src = (filename: string) => `http://localhost:28100/static/${filename}`;
 </script>
 
 

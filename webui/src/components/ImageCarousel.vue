@@ -2,7 +2,7 @@
   <div @wheel="handleWheel" class="carousel-container">
     <Carousel ref="carousel" :itemsToShow="3" :mouseDrag="true" :touchDrag="true">
       <Slide v-for="(image, index) in images" :key="index">
-        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes"
+        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes" :path="image.path"
           :captions="image.captions" @delete="deleteImage(image.filename)" />
       </Slide>
     </Carousel>
@@ -23,10 +23,13 @@
 import { Carousel, Slide } from 'vue3-carousel';
 import ImageCard from './ImageCard.vue';
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { createImageListProps } from '@/types'; // Replace with your actual type import
+import { DBImageData } from '@/types'; // Replace with your actual type import
 
-const props = createImageListProps();
-const images = props.images;
+const props = defineProps<{
+  images: DBImageData[]
+}>();
+
+
 const emit = defineEmits(['delete-image']);
 
 // const carouselRef = ref<InstanceType<typeof Carousel> | null>(null);

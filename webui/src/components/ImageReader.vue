@@ -54,11 +54,11 @@ import { ref, computed, onMounted, watch, provide } from 'vue';
 import ImageCarousel from './ImageCarousel.vue';
 import ImageGrid from './ImageGrid.vue';
 import ImageAPI from '../api/ImageAPI';
-import {Image } from '../types';
+import {DBImageData } from '../types';
 import useToast from '@/composables/useToast';
 
 const toast = useToast();
-const images = ref<Image[]>([]);
+const images = ref<DBImageData[] >([]);
 const currentPage = ref(1);
 const socket = ref<WebSocket | null>(null);
 const isGridView = ref(true); // State for toggling between grid and carousel
@@ -83,24 +83,29 @@ const fetchImages = async () => {
 
 // WebSocket connection to get real-time updates
 const connectWebSocket = () => {
-    socket.value = new WebSocket('ws://server:28100/ws');
-    socket.value.onmessage = (event: MessageEvent) => {
-        const data = JSON.parse(event.data);
-        if (Array.isArray(data.images)) {
-            images.value = data.images;
-            isLoading.value = false;
-        } else {
-            console.error('Received non-array images data:', data.images);
-        }
-    };
-    socket.value.onerror = (error: Event) => {
-        console.error(`WebSocket Error: ${error}`);
-    };
+    try {
+        socket.value = new WebSocket('ws://server:28100/ws');
+        socket.value.onmessage = (event: MessageEvent) => {
+            const data = JSON.parse(event.data);
+            if (Array.isArray(data.images)) {
+                images.value = data.images;
+                isLoading.value = false;
+            } else {
+                console.error('Received non-array images data:', data.images);
+            }
+        };
+        socket.value.onerror = (error: Event) => {
+            console.error(`WebSocket Error: ${error}`);
+        };
+    }
+    catch (error) {
+        console.error('Failed to connect to WebSocket:', error);
+    }
 };
 
 
 // Provide handleUpdate method to children components
-const handleUpdate = async (filename: string, updateData: Image) => {
+const handleUpdate = async (filename: string, updateData: DBImageData) => {
     const api = new ImageAPI('http://server:28100');
     console.log('Updating image:', filename, updateData);
     try {
@@ -113,7 +118,6 @@ const handleUpdate = async (filename: string, updateData: Image) => {
     }
 };
 
-
 const handleDelete = async (filename: string) => {
     const api = new ImageAPI('http://server:28100');
     try {
@@ -125,6 +129,7 @@ const handleDelete = async (filename: string) => {
         toast.showToast?.('Error deleting image');
     }
 };
+
 
 onMounted(() => {
     fetchImages();

@@ -7,7 +7,7 @@
                     <!-- Modal content goes here -->
                     <div class="p-6">
                         <!-- ImageCard component -->
-                        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes"
+                        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes" :path="image.path"
                             :captions="image.captions" @delete="handleDelete" @update="handleUpdate" />
                         <!-- Close button -->
                         <button @click="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-300">
@@ -24,11 +24,11 @@
 <script setup lang="ts">
 import { inject, defineEmits, ref } from 'vue';
 import ImageCard from './ImageCard.vue';
-import type { Image } from '@/types'; // Assuming Image type is defined in types.ts
+import type { DBImageData } from '@/types'; // Assuming Image type is defined in types.ts
 
 // Define props and emits
 const props = defineProps<{
-    image: Image;
+    image: DBImageData;
 }>();
 const image = ref(props.image);
 const emit = defineEmits(['close', 'delete-image']);

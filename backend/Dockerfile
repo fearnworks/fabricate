@@ -30,5 +30,6 @@ RUN chmod +x /app/backend/run.sh
 USER appuser
 WORKDIR /app/backend
 RUN python3.11 -m pip install /app/backend
+EXPOSE 28100
 ENTRYPOINT ["tini", "--", "/app/backend/run.sh"]
 # CMD ["tail", "-f", "/dev/null"]

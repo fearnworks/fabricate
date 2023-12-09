@@ -19,9 +19,10 @@ RUN npm install
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY ./webui /app/webui
 RUN chmod +x /app/webui/run_webui.sh
+WORKDIR /app/webui
 # build app for production with minification
-# RUN npm run dev
+RUN npm run build
 
-EXPOSE 8080
+EXPOSE 28101
 ENTRYPOINT ["tini", "--", "/app/webui/run_webui.sh"]
 # CMD ["tail", "-f", "/dev/null"]

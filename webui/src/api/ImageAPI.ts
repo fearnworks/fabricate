@@ -1,11 +1,12 @@
 import axios, { AxiosInstance } from 'axios';
-import { Image, ImageList} from '@/types';
+import { DBImageData} from '@/types';
+import getSrc from '@/composables/utils';
 
 
 interface ImageAPIInterface {
-  fetchImages: () => Promise<Image[]>;
+  fetchImages: () => Promise<DBImageData[]>;
   deleteImage: (filename: string) => Promise<void>;
-  updateImage: (filename: string, updateData: Image) => Promise<void>;
+  updateImage: (filename: string, updateData: DBImageData) => Promise<void>;
 }
 
 class ImageAPI implements ImageAPIInterface {
@@ -15,9 +16,12 @@ class ImageAPI implements ImageAPIInterface {
     this.axiosInstance = axiosInstance || axios.create({ baseURL });
   }
 
-  async fetchImages(): Promise<ImageList> {
-    const response = await this.axiosInstance.get<Image[]>('/images');
-    const imageList: ImageList = response.data;
+  async fetchImages(): Promise<DBImageData[]> {
+    const response = await this.axiosInstance.get<DBImageData[]>('/images');
+    const imageList: DBImageData[] = response.data.map(image => {
+      image.path = getSrc(image.filename);
+      return image;
+    });
     return imageList;
   }
 
@@ -25,7 +29,7 @@ class ImageAPI implements ImageAPIInterface {
     await this.axiosInstance.delete(`/delete-image/${filename}`);
   }
 
-  async updateImage(filename: string, updateData: Image): Promise<void> {
+  async updateImage(filename: string, updateData: DBImageData): Promise<void> {
     await this.axiosInstance.patch(`/update-image/${filename}`, updateData);
   }
 
