@@ -17,9 +17,12 @@ class ImageAPI implements ImageAPIInterface {
   }
 
   async fetchImages(): Promise<DBImageData[]> {
-    const response = await this.axiosInstance.get<DBImageData[]>('/images');
-    const imageList: DBImageData[] = response.data.map(image => {
+    console.log('fetchImages', this.axiosInstance.defaults.baseURL)
+    const response = await this.axiosInstance.get<{images: DBImageData[]}>('/images');
+    console.log(response)
+    const imageList: DBImageData[] = response.data.images.map(image => {
       image.path = getSrc(image.filename);
+      console.log(image.path)
       return image;
     });
     return imageList;

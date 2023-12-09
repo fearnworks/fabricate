@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
-    container_name: fabricate_server
+    container_name: server
     ports:
       - 28100:28100
     volumes:
@@ -33,7 +33,7 @@ services:
     build:
       context: .
       dockerfile: ./webui/Dockerfile
-    container_name: fabricate_webui
+    container_name: webui
     ports:
       - 28101:28101
       - 5173:5173

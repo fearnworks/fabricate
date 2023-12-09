@@ -15,7 +15,7 @@ describe('ImageCard', () => {
         tags: [],
         notes: '',
         captions: '',
-        path: 'http://server:28100/static/test-image.png'
+        path: 'http://localhost:28100/static/test-image.png'
       },
       // Provide mocks for any injected dependencies or global properties
       global: {

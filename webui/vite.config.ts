@@ -12,6 +12,10 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    server: {
+        host: true,
+        port: 28100
+    },
     test: {
         // Test configuration here
         globals: true,

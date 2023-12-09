@@ -33,7 +33,6 @@
         <div v-else>
             <div v-if="isGridView" class="max-w-7xl mx-auto px-4 py-6">
                 <!-- Grid Component Here -->
-                Grid
                 <ImageGrid :images="images" @delete-image="handleDelete" @update-image="handleUpdate" />
             </div>
             <div v-else>
@@ -60,14 +59,13 @@ import useToast from '@/composables/useToast';
 const toast = useToast();
 const images = ref<DBImageData[] >([]);
 const currentPage = ref(1);
-const socket = ref<WebSocket | null>(null);
 const isGridView = ref(true); // State for toggling between grid and carousel
 const isLoading = ref(true);
 const viewMode = computed(() => (isGridView.value ? 'grid' : 'carousel'));
 
 const fetchImages = async () => {
     isLoading.value = true; 
-    const api = new ImageAPI('http://server:28100');
+    const api = new ImageAPI('http://localhost:28100');
     try {
         const fetchedImages = await api.fetchImages();
         images.value = fetchedImages;
@@ -81,32 +79,10 @@ const fetchImages = async () => {
     }
 };
 
-// WebSocket connection to get real-time updates
-const connectWebSocket = () => {
-    try {
-        socket.value = new WebSocket('ws://server:28100/ws');
-        socket.value.onmessage = (event: MessageEvent) => {
-            const data = JSON.parse(event.data);
-            if (Array.isArray(data.images)) {
-                images.value = data.images;
-                isLoading.value = false;
-            } else {
-                console.error('Received non-array images data:', data.images);
-            }
-        };
-        socket.value.onerror = (error: Event) => {
-            console.error(`WebSocket Error: ${error}`);
-        };
-    }
-    catch (error) {
-        console.error('Failed to connect to WebSocket:', error);
-    }
-};
-
 
 // Provide handleUpdate method to children components
 const handleUpdate = async (filename: string, updateData: DBImageData) => {
-    const api = new ImageAPI('http://server:28100');
+    const api = new ImageAPI('http://localhost:28100');
     console.log('Updating image:', filename, updateData);
     try {
         await api.updateImage(filename, updateData);
@@ -119,7 +95,7 @@ const handleUpdate = async (filename: string, updateData: DBImageData) => {
 };
 
 const handleDelete = async (filename: string) => {
-    const api = new ImageAPI('http://server:28100');
+    const api = new ImageAPI('http://localhost:28100');
     try {
         await api.deleteImage(filename);
         images.value = images.value.filter((image) => image.filename !== filename);
@@ -133,7 +109,7 @@ const handleDelete = async (filename: string) => {
 
 onMounted(() => {
     fetchImages();
-    connectWebSocket();
+    // connectWebSocket();
 });
 
 watch(currentPage, (newPage) => {

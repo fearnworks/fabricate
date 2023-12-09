@@ -14,7 +14,6 @@ from rich.console import Console
 from rich.logging import RichHandler
 import lifecycle as lifecycle
 
-import argparse 
 from config import load_config
 from image_router import router as image_router
 
@@ -24,13 +23,8 @@ console = Console()
 logger.remove()
 logger.add(RichHandler())
 
-# def parse_arguments():
-#     parser = argparse.ArgumentParser(description="Fabricate AI Driver Synthetic Data Management")
-#     parser.add_argument("--config", type=str, default="./configs/local/config.yaml", help="Path to the configuration file")
-    
-#     return parser.parse_args()# Load configuration
-with open("config.yaml", "r") as f:
-    config = yaml.safe_load(f)
+config = load_config()
+
     
 app = FastAPI(title="Fabricate API")
 
@@ -55,7 +49,6 @@ app.add_middleware(
     allow_methods=["*"],  # This allows all methods, including DELETE
     allow_headers=["*"],
 )
-# args = parse_arguments()
 
 # Mount the static directory specified in the config file
 app.mount("/static", StaticFiles(directory=config["image_directory"]), name="static")
