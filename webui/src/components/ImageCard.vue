@@ -6,6 +6,7 @@
       <!-- Image Container -->
       <div class="relative group w-1/2">
         <img :src="get_src(editableFilename)" alt="Image" class="object-cover rounded-2xl w-full h-auto" />
+
         <button
           class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl"
           @click="showZoomed = true">
@@ -69,6 +70,7 @@ import { createImageProps } from '@/types'; // Assuming Image type is defined in
 
 const props = createImageProps();
 
+
 const emit = defineEmits(['update', 'delete']);
 
 const handleUpdate = inject('handleUpdate') as (filename: string, data: any) => void;
@@ -101,6 +103,7 @@ const moveImage = () => console.log('Move image:', props.filename);
 
 const get_src = (filename: string) => `http://localhost:28100/static/${filename}`;
 </script>
+
 
 <style scoped>
 /* Styles for ImageCard */
