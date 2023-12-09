@@ -39,6 +39,8 @@ It streamlines the process of sorting, labeling, and manipulating images, cateri
 - Extensibility: Designed for future feature additions or integration with other tools and services.
 
 ### Installation and Setup
+TBD : These are approximated instructions while the permanent mounting system is being developed. 
+
 ```bash
 # Clone the repository
 git clone https://github.com/fearnworks/fabricate
