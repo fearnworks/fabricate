@@ -9,4 +9,4 @@ sandbox
 ./backend/BakLLaVA
 .venv
 wandb
-./backend/configs/config.yaml
+./backend/configs/local/

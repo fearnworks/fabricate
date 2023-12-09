@@ -47,9 +47,10 @@ git clone https://github.com/fearnworks/fabricate
 
 # Navigate to the project directory
 cp .envtemplate .env 
-cp backend/configs/config.example.yaml backend/configs/config.yaml # Update config file with your own values
+mkdir backend/configs/local
+cp backend/configs/config.example.yaml backend/configs/local/config.yaml # Update config file with your own values
 
-docker compose up
+bash ./setup.sh 
 ```
 
 ### Usage
