@@ -1,3 +1,5 @@
+import { defineProps, withDefaults, PropType } from 'vue';
+
 export interface ToastMethods {
   /**
    * This method is used to display a toast message.
@@ -12,3 +14,22 @@ export interface Image {
     notes: string;
     captions: string;
 }
+
+export const createImageProps = () =>
+  withDefaults(defineProps<Image>(), {
+    filename: '',
+    tags: () => [],
+    notes: '',
+    captions: '',
+  });
+
+export interface ImageList extends Array<Image> {}
+
+export const createImageListProps = () => {
+  return defineProps({
+    images: {
+      type: Array as PropType<ImageList>,
+      required: true,
+    },
+  });
+};

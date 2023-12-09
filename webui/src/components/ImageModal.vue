@@ -20,8 +20,9 @@
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
-import { inject, defineEmits } from 'vue';
+import { inject, defineEmits, ref } from 'vue';
 import ImageCard from './ImageCard.vue';
 import type { Image } from '@/types'; // Assuming Image type is defined in types.ts
 
@@ -29,7 +30,7 @@ import type { Image } from '@/types'; // Assuming Image type is defined in types
 const props = defineProps<{
     image: Image;
 }>();
-
+const image = ref(props.image);
 const emit = defineEmits(['close', 'delete-image']);
 
 const handleUpdate = inject<(filename: string, data: any) => void>('handleUpdate');

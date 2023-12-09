@@ -1,0 +1,26 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=68.0",
+  "setuptools-scm",
+  "pytest",
+]
+
+[project]
+description = "Fabricate"
+name = "fabricate"
+version = "0.1"
+dynamic = ["dependencies", "optional-dependencies"]
+
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements/requirements.in"] }
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "backend",
+]
+
+[tool.setuptools.packages.find]
+include = ["backend", "backend.*", "config"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)

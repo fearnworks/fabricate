@@ -11,6 +11,6 @@ describe('ImageGrid', () => {
     })
 
     const renderedImage = getByAltText(image.filename)
-    expect(renderedImage.getAttribute('src')).to.equal('http://localhost:8000/static/test-image.png')
+    expect(renderedImage.getAttribute('src')).to.equal('http://server:28100/static/test-image.png')
   })
 })

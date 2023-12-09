@@ -1,10 +1,10 @@
 {
   "name": "webui",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 28101 --host 0.0.0.0",
     "build": "vue-tsc && vite build",
     "test": "vitest",
     "test:watch": "vitest watch",

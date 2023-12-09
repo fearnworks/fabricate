@@ -12,20 +12,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ImageModal from './ImageModal.vue';
-import { Image } from '../types';
+import { Image, createImageListProps } from '@/types';
 
-// Define props
-const props = defineProps({
-    images: {
-        type: Array as PropType<Image[]>,
-        required: true,
-    }
-});
-
+const props = createImageListProps();
+const images = ref(props.images);
 const selectedImage = ref<Image | null>(null);
 
 function getImageUrl(filename: string) {
-    return `http://localhost:8000/static/${filename}`;
+    return `http://server:28100/static/${filename}`;
 }
 
 function showModal(image: Image) {
