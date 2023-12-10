@@ -1,26 +1,42 @@
 <template>
-  <div @wheel="handleWheel" class="carousel-container">
-    <Carousel ref="carousel" :itemsToShow="3" :mouseDrag="true" :touchDrag="true">
-      <Slide v-for="(image, index) in images" :key="index">
-        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes" :path="image.path"
-          :captions="image.captions" @delete="deleteImage(image.filename)" />
-      </Slide>
-    </Carousel>
+  <div class="carousel-container">
+    <q-carousel
+      v-model="slide"
+      animated
+      navigation
+      infinite
+      arrows
+      @mouseenter="autoplay = false"
+      @mouseleave="autoplay = true"
+    >
+      <q-carousel-slide
+        v-for="(image, index) in images"
+        :key="index"
+        :name="index"
+      >
+        <ImageCard
+          :filename="image.filename"
+          :tags="image.tags"
+          :notes="image.notes"
+          :path="image.path"
+          :captions="image.captions"
+          @delete="deleteImage(image.filename)"
+        />
+      </q-carousel-slide>
+    </q-carousel>
     <div class="flex justify-center mt-4">
-      <button @click="prev" data-testid="prev-button"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-1">
+      <button @click="prev" data-testid="prev-button" class="custom-button">
         Previous
       </button>
-      <button @click="next" data-testid="next-button"
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-1">
+      <button @click="next" data-testid="next-button" class="custom-button">
         Next
       </button>
     </div>
   </div>
 </template>
 
+
 <script setup lang="ts">
-import { Carousel, Slide } from 'vue3-carousel';
 import ImageCard from './ImageCard.vue';
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { DBImageData } from '@/types'; // Replace with your actual type import
@@ -29,11 +45,9 @@ const props = defineProps<{
   images: DBImageData[]
 }>();
 
-
+const slide = ref(1)
+const autoplay = ref(true)
 const emit = defineEmits(['delete-image']);
-
-// const carouselRef = ref<InstanceType<typeof Carousel> | null>(null);
-const isThrottled = ref(false);
 
 const next = () => {
   console.log("Next")
@@ -41,14 +55,6 @@ const next = () => {
 
 const prev = () => {
   console.log("Prev")
-};
-
-const handleWheel = (event: WheelEvent) => {
-  if (!isThrottled.value) {
-    isThrottled.value = true;
-    setTimeout(() => (isThrottled.value = false), 200);
-    event.deltaY > 0 ? next() : prev();
-  }
 };
 
 watch(() => props.images, (newImages) => {
@@ -69,3 +75,8 @@ onBeforeUnmount(() => {
 });
 </script>
 
+<style>
+.carousel-container {
+  height: 100%;
+}
+</style> 

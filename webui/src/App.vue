@@ -1,7 +1,8 @@
 <template>
   <div id="app" >
     <ToastComponent />
-    <ImageReader class="bg-slate-600"/>
+
+    <Layout/>
   </div>
 </template>
 
@@ -10,11 +11,12 @@ import { defineComponent, provide } from 'vue';
 import ImageReader from './components/ImageReader.vue';
 import ToastComponent from './components/ToastComponent.vue';
 import useToast from '@/composables/useToast'; 
-
+import Layout from '@/components/Layout.vue';
 export default defineComponent({
   name: 'App',
   components: {
     ImageReader,
+    Layout,
     ToastComponent
   },
   setup() {

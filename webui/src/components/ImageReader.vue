@@ -1,56 +1,21 @@
 <template>
-    <div class="bg-gray-100 min-h-screen">
-        <!-- Top Bar -->
-        <div class="bg-white px-4 py-2 shadow-md">
-            <div class="flex items-center justify-between max-w-7xl mx-auto">
-                <h1 class="text-3xl font-bold text-blue-600">FABRICATE</h1>
-                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                    <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox hidden"
-                        @change="toggleViewMode" />
-                    <label for="toggle"
-                        class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                </div>
-                <span class="text-gray-700" v-if="viewMode === 'grid'">
-                    {{viewMode}}
-                    <i aria-label="grid-toggle" class="fas fa-th"></i> <!-- Grid icon -->
-                </span>
-                <span class="text-gray-700" v-else>
-                    <i  aria-label="carousel-toggle" class="fas fa-images"></i> <!-- Carousel icon -->
-                </span>
-            </div>
-        </div>
-
+    <div>
         <!-- Search Bar -->
         <div class="max-w-7xl mx-auto px-4 py-6">
             <input type="search" placeholder="Want to search for something?" class="w-full p-4 border rounded shadow-sm">
         </div>
-
-        <!-- Loading Placeholder -->
-        <div v-if="isLoading">
-            <p>Loading images...</p>
-        </div>
         <!-- Conditional Rendering Based on View Mode -->
-        <div v-else>
-            <div v-if="isGridView" class="max-w-7xl mx-auto px-4 py-6">
+        <div>
+            <div class="max-w-8xl mx-auto px-4 py-6">
                 <!-- Grid Component Here -->
                 <ImageGrid :images="images" @delete-image="handleDelete" @update-image="handleUpdate" />
             </div>
-            <div v-else>
-                Carousel
-                <ImageCarousel :images="images" @delete-image="handleDelete" />
-            </div>
-        </div>
-
-        <!-- Pagination Controls -->
-        <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-            <!-- Pagination Here -->
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, provide } from 'vue';
-import ImageCarousel from './ImageCarousel.vue';
+import { ref, onMounted, watch, provide } from 'vue';
 import ImageGrid from './ImageGrid.vue';
 import ImageAPI from '../api/ImageAPI';
 import {DBImageData } from '../types';
@@ -61,7 +26,6 @@ const images = ref<DBImageData[] >([]);
 const currentPage = ref(1);
 const isGridView = ref(true); // State for toggling between grid and carousel
 const isLoading = ref(true);
-const viewMode = computed(() => (isGridView.value ? 'grid' : 'carousel'));
 
 const fetchImages = async () => {
     isLoading.value = true; 
