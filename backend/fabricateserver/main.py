@@ -13,10 +13,10 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from rich.console import Console
 from rich.logging import RichHandler
-import fabricate_server.lifecycle as lifecycle
+import fabricateserver.lifecycle as lifecycle
 
-from fabricate_server.config import load_config
-from fabricate_server.image_router import router as image_router
+from fabricateserver.config import load_config
+from fabricateserver.image_router import router as image_router
 
 # Create a console instance
 console = Console()

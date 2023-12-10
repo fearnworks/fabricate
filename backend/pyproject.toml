@@ -8,7 +8,7 @@ requires = [
 
 [project]
 description = "Fabricate"
-name = "fabricate_server"
+name = "fabricateserver"
 version = "0.1"
 dynamic = ["dependencies", "optional-dependencies"]
 
@@ -22,5 +22,5 @@ pythonpath = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["backend", "backend.*", "config"]  # package names should match these glob patterns (["*"] by default)
+include = ["fabricateserver", "fabricateserver.*", "config"]  # package names should match these glob patterns (["*"] by default)
 exclude = []  # exclude packages matching these glob patterns (empty by default)

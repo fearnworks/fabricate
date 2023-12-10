@@ -1,24 +1,23 @@
 """ This module defines the endpoints for the image API. """
 import asyncio
-from typing import List
 import os
 from fastapi import APIRouter, HTTPException, WebSocket
 from websockets.exceptions import ConnectionClosedOK
 from starlette.websockets import WebSocketDisconnect
-from fabricate_server.models.image_model import ImageModel, ImageList
-from fabricate_server.storage import (
+from PIL import Image
+from loguru import logger
+
+from fabricateserver.model_manager import is_model_loaded
+from fabricateserver.caption import generate_image_caption
+from fabricateserver.config import config
+from fabricateserver.models.image_model import ImageModel, ImageList
+from fabricateserver.db.storage import (
     read_images,
     save_metadata,
     delete_image_file,
     add_new_image,
     fetch_image,
 )
-from loguru import logger
-from fabricate_server.model_manager import is_model_loaded
-from fabricate_server.caption import generate_image_caption
-from fabricate_server.config import config
-from PIL import Image
-
 # Define a new router
 router = APIRouter()
 

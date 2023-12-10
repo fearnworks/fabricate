@@ -6,12 +6,5 @@ gunicorn
 watchdog
 rich
 loguru
-SwissArmyTransformer>=0.4.8
-transformers>=4.33.1
-xformers>=0.0.22
-torch
-torchvision
-accelerate
-tenacity
 sqlalchemy
 python-dotenv
