@@ -7,6 +7,7 @@ export interface ToastMethods {
 }
 
 export interface DBImageData {
+  uid: string;
   filename: string;
   tags: string[];
   notes: string;

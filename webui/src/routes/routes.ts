@@ -6,7 +6,7 @@ export const About = { template: '<div>About</div>' }
 const routes = [
     { path: '/', component: Home },
     { path: '/about', component: About },
-    { path: '/images/:id', component: image }
+    { path: '/images/:uid', component: image }
 ]
 
 export const router = VueRouter.createRouter({

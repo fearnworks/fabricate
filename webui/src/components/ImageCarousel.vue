@@ -15,6 +15,7 @@
         :name="index"
       >
         <ImageCard
+          :uid="image.uid"
           :filename="image.filename"
           :tags="image.tags"
           :notes="image.notes"

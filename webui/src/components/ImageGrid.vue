@@ -1,7 +1,7 @@
 <template>
     <div class="grid-container">
         <q-card v-for="(image, index) in images" :key="index">
-            <router-link :to="`/images/${image.filename}`">
+            <router-link :to="`/images/${image.uid}`">
                 <q-img :src="image.path" :alt="image.path" :data-testid="`image-${index}`">
 
                 </q-img>

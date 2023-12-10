@@ -1,10 +1,9 @@
 """ This module defines the endpoints for the image API. """
 import asyncio
 from loguru import logger
-from fastapi import APIRouter, HTTPException, WebSocket, Path
+from fastapi import APIRouter, HTTPException, WebSocket
 from websockets.exceptions import ConnectionClosedOK
 from starlette.websockets import WebSocketDisconnect
-from bson import ObjectId
 from fabricateserver.config.manager import config
 from fabricateserver.schema import ImageModel, ImageList
 from fabricateserver.db.storage import (

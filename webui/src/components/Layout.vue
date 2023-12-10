@@ -8,18 +8,12 @@
                 </q-toolbar-title>
                 <router-link to="/">Go to Home</router-link>
                 <router-link to="/about">Go to About</router-link>
-                <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
             </q-toolbar>
         </q-header>
 
         <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
             <ImageReader class="bg-slate-600" />
         </q-drawer>
-
-        <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
-            <div className="bg-slate-700 text-white min-h-screen">Image Forms</div>
-        </q-drawer>
-
         <q-page-container>
             <router-view></router-view>
         </q-page-container>
@@ -39,13 +33,8 @@ import { ref } from 'vue';
 import ImageReader from '@/components/ImageReader.vue';
 
 const leftDrawerOpen = ref(false);
-const rightDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {
     leftDrawerOpen.value = !leftDrawerOpen.value;
-};
-
-const toggleRightDrawer = () => {
-    rightDrawerOpen.value = !rightDrawerOpen.value;
 };
 </script>
