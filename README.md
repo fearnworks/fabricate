@@ -50,11 +50,19 @@ cp .envtemplate .env
 mkdir backend/configs/local
 cp backend/configs/config.example.yaml backend/configs/local/config.yaml # Update config file with your own values
 ln -s YOURDATASTOREPATH ./datastore
+python3.11 -m venv venv
+source venv/bin/activate
+pip install -e ./backend
 cd webui
 npm install 
 cd ..
 
 bash ./setup.sh 
+```
+
+To run :
+```bash
+docker compose up
 ```
 
 ### Usage
