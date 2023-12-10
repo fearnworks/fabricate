@@ -21,10 +21,6 @@ defineProps<{
 }>();
 
 const selectedImage = ref<DBImageData | null>(null);
-
-function showModal(image: DBImageData) {
-    selectedImage.value = image;
-}
 </script>
   
 <style>

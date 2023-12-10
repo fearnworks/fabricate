@@ -28,7 +28,7 @@ services:
       - fabricate-network
     depends_on:
       - cache
-
+      - db
   webui:
     build:
       context: .
@@ -46,6 +46,14 @@ services:
       - fabricate-network
     depends_on:
       - server
+  db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - ./datastore/mongo-data:/data/db:rw
+    networks:
+      - fabricate-network
 networks:
   fabricate-network:
     external: true

@@ -24,7 +24,6 @@ import useToast from '@/composables/useToast';
 const toast = useToast();
 const images = ref<DBImageData[] >([]);
 const currentPage = ref(1);
-const isGridView = ref(true); // State for toggling between grid and carousel
 const isLoading = ref(true);
 
 const fetchImages = async () => {
@@ -80,9 +79,6 @@ watch(currentPage, (newPage) => {
     console.log('Current page changed:', newPage);
 });
 
-const toggleViewMode = () => {
-    isGridView.value = !isGridView.value;
-};
 
 provide('handleUpdate', handleUpdate);
 
