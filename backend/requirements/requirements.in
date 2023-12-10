@@ -8,3 +8,5 @@ rich
 loguru
 sqlalchemy
 python-dotenv
+tenacity
+pillow

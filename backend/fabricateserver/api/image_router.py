@@ -7,10 +7,9 @@ from starlette.websockets import WebSocketDisconnect
 from PIL import Image
 from loguru import logger
 
-from fabricateserver.model_manager import is_model_loaded
-from fabricateserver.caption import generate_image_caption
-from fabricateserver.config import config
-from fabricateserver.models.image_model import ImageModel, ImageList
+
+from fabricateserver.config.manager import config
+from fabricateserver.schema import ImageModel, ImageList
 from fabricateserver.db.storage import (
     read_images,
     save_metadata,
@@ -84,30 +83,31 @@ async def caption_image(filename: str):
     Returns:
         A JSON response containing the image caption.
     """
-    if not is_model_loaded():
-        raise HTTPException(status_code=503, detail="Model is still loading")
+    logger.info("Disabled for refactoring")
+    # if not is_model_loaded():
+    #     raise HTTPException(status_code=503, detail="Model is still loading")
 
-    try:
-        # Fetch the image metadata
-        image_metadata = fetch_image(filename)
+    # try:
+    #     # Fetch the image metadata
+    #     image_metadata = fetch_image(filename)
 
-        # Construct the path to the image file using the static directory
-        image_path = os.path.join(static_directory, image_metadata.filename)
+    #     # Construct the path to the image file using the static directory
+    #     image_path = os.path.join(static_directory, image_metadata.filename)
 
-        if not os.path.isfile(image_path):
-            raise HTTPException(
-                status_code=404, detail="Image file not found in static directory"
-            )
+    #     if not os.path.isfile(image_path):
+    #         raise HTTPException(
+    #             status_code=404, detail="Image file not found in static directory"
+    #         )
 
-        # Open and process the image for captioning
-        with open(image_path, "rb") as image_file:
-            image = Image.open(image_file).convert("RGB")
-            caption = await generate_image_caption(image)
+    #     # Open and process the image for captioning
+    #     with open(image_path, "rb") as image_file:
+    #         image = Image.open(image_file).convert("RGB")
+    #         caption = await generate_image_caption(image)
 
-        # Return the caption
-        return {"caption": caption}
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail="Image metadata not found") from e
-    except Exception as e:
-        logger.error(f"Error in captioning image {filename}: {e}")
-        raise HTTPException(status_code=500, detail="Error generating caption") from e
+    #     # Return the caption
+    #     return {"caption": caption}
+    # except FileNotFoundError as e:
+    #     raise HTTPException(status_code=404, detail="Image metadata not found") from e
+    # except Exception as e:
+    #     logger.error(f"Error in captioning image {filename}: {e}")
+    #     raise HTTPException(status_code=500, detail="Error generating caption") from e

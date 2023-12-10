@@ -2,8 +2,8 @@
 import os
 import json
 from typing import List
-from fabricateserver.models.image_model import ImageModel, ImageList
-from fabricateserver.config import config
+from fabricateserver.schema import ImageModel, ImageList
+from fabricateserver.config.manager import config
 from loguru import logger
 
 # Define the path to the JSONL file where metadata will be stored

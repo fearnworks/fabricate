@@ -1,15 +1,13 @@
 """ Application lifecycle events. """
 
 from loguru import logger
-from fabricateserver.model_manager import start_model_loading
-
 
 async def startup(load_model=False):
     """ Application startup event handler. """
     logger.info("Application startup: ")
     if load_model:
         logger.info("Model loading in background...")
-        start_model_loading()
+
 
 async def shutdown():
     """ Application shutdown event handler. """

@@ -1,12 +1,7 @@
 import yaml
 from loguru import logger
-from dataclasses import dataclass
+from fabricateserver.config import Config
 
-@dataclass
-class Config:
-    image_directory: str 
-    metadata_directory: str
-    model_directory: str
 
 def load_config(file_path: str = "/code/configs/local/config.yaml") -> Config:
     """This function loads the config file and returns a Config object.
