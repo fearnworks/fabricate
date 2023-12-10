@@ -12,7 +12,7 @@ describe('ImageGrid', () => {
       tags: [],
       notes: '',
       captions: '',
-      path: 'http://localhost:28100/static/test-image.png'
+      path: 'http://192.168.1.75:28100/static/test-image.png'
     };
 
     // Mount the component with props

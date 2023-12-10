@@ -11,13 +11,13 @@
         <q-drawer v-model="drawerOpen" side="right" bordered>
             <div class="bg-slate-700 text-white min-h-screen">
                 <div class="q-pa-md">
-                    <div class="q-gutter-y-md column" style="max-width: 300px">
+                    <div class="q-gutter-y-md column" style="max-width: 300px" v-if="image && editableImage">
                         <!-- Display image details -->
                         <p>Image UID: {{ image.uid }}</p>
                         <q-input filled v-model="editableImage.filename" label="Filename" dark />
                         <q-input filled v-model="editableImage.captions" label="Captions" type="textarea" dark />
                         <q-input filled v-model="editableImage.notes" label="Notes" type="textarea" dark />
-                        <q-input filled v-model="editableImage.tags" label="Tags" dark />
+                        <!-- <q-input filled v-model="editableImage.tags" label="Tags" dark /> -->
                         <q-input filled v-model="editableImage.path" label="Path" dark readonly />
                         <q-btn label="Update" color="primary" class="q-mt-md" @click="submitUpdate"/>
                         <q-btn label="Delete" color="negative" class="q-mt-md" @click="submitDelete"/>
@@ -43,12 +43,19 @@ const uid = computed(() => route.params.uid as string);
 
 // Fetch image by UID
 const image = computed(() => imageStore.getImageByUid(uid.value));
+
 const editableImage = ref({ ...image.value }); // Make a reactive copy for editing
+
 const submitUpdate = async () => {
-  await imageStore.handleUpdate(editableImage.value.uid, editableImage.value);
+  if (image.value) {
+    await imageStore.handleUpdate(image.value.uid, image.value);
+  }
 };
+
 const submitDelete = async () => {
-  await imageStore.handleDelete(editableImage.value.uid);
+  if (image.value) {
+    await imageStore.handleDelete(image.value.uid);
+  }
 };
 watch(image, (newValue) => {
   editableImage.value = { ...newValue };

@@ -4,11 +4,13 @@ import ImageAPI from '@/api/ImageAPI';
 import { DBImageData } from '@/types';
 
 export const useImageStore = defineStore('imageStore', () => {
+    const base = process.env.SERVER_URL
+    const server = `http://${base}:28100`;
     const images = ref<DBImageData[]>([]);
     // const isLoading = ref(false); // Uncomment if you want to track loading state
 
     const fetchImages = async () => {
-        const api = new ImageAPI('http://localhost:28100');
+        const api = new ImageAPI(server);
         // isLoading.value = true; // Start loading
         try {
             const fetchedImages = await api.fetchImages();
@@ -22,7 +24,7 @@ export const useImageStore = defineStore('imageStore', () => {
     };
 
     const handleUpdate = async (uid: string, updateData: DBImageData) => {
-        const api = new ImageAPI('http://localhost:28100');
+        const api = new ImageAPI(server);
         try {
             console.log('updateData', updateData)
             await api.updateImage(uid, updateData);
@@ -33,7 +35,7 @@ export const useImageStore = defineStore('imageStore', () => {
     };
 
     const handleDelete = async (uid: string) => {
-        const api = new ImageAPI('http://localhost:28100');
+        const api = new ImageAPI(server);
         try {
             await api.deleteImage(uid);
             images.value = images.value.filter((image) => image.uid !== uid);
