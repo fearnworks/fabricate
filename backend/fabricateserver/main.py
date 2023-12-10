@@ -10,7 +10,6 @@ from fabricateserver.config.manager import load_config
 from fabricateserver.config.middleware import setup_middle_ware
 import fabricateserver.api.routers as Routers
 import fabricateserver.mount.mount as Mount
-
 config = load_config()
 
 

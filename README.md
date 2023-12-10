@@ -50,7 +50,9 @@ cp .envtemplate .env
 mkdir backend/configs/local
 cp backend/configs/config.example.yaml backend/configs/local/config.yaml # Update config file with your own values
 ln -s YOURDATASTOREPATH ./datastore
-
+cd webui
+npm install 
+cd ..
 
 bash ./setup.sh 
 ```
