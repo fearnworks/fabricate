@@ -7,7 +7,7 @@ services:
       - 46379:46379
     volumes:
     - ./redis.conf:/usr/local/etc/redis/redis.conf
-    - /mnt/e/redis-data/fabricate:/data:rw
+    - ./datastore/redis-data/fabricate:/data:rw
     command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - fabricate-network
@@ -21,7 +21,7 @@ services:
       - 28100:28100
     volumes:
       - ./backend:/code
-      - /mnt/e/fabricate:/data:rw
+      - ./datastore:/data:rw
     env_file:
       - .env
     networks:
@@ -39,6 +39,7 @@ services:
       - 5173:5173
     volumes:
       - ./webui:/code
+      - ./datastore:/data:rw
     env_file:
       - .env
     networks:

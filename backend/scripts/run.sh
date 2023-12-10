@@ -2,8 +2,8 @@
 
 # Load environment variables from .env file
 # set -a; source /.env; set +a
-
-PRE_START_PATH=${PRE_START_PATH:-/code/prestart.sh}
+cd /code
+PRE_START_PATH=${PRE_START_PATH:-/code/scripts/prestart.sh}
 echo "PRE_START_PATH is $PRE_START_PATH"
 ls "$(dirname "$PRE_START_PATH")"
 

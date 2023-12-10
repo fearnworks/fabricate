@@ -11,25 +11,21 @@ RUN --mount=type=cache,target=/var/cache/apt,id=apt \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN python3.11 -m pip install --upgrade pip
 
-# Create appuser
-RUN groupadd -r appuser && useradd --no-log-init -r -g appuser appuser
-
 # Create app directory and change ownership to appuser
-RUN mkdir /app && \
-    mkdir -p /home/appuser/.cache && \
-    chown -R appuser:appuser /app /home/appuser
-COPY ./backend/requirements.txt /app/requirements.txt
+RUN mkdir /app 
+COPY ./backend/requirements/requirements.in /app/requirements.txt
 RUN --mount=type=cache,target=~/.cache/pip \
     python3.11 -m pip install -r /app/requirements.txt
+
 
 #Set working directory to /app
 WORKDIR /app
 
-COPY --chown=appuser:appuser  ./backend /app/backend
-RUN chmod +x /app/backend/run.sh
-USER appuser
+COPY ./backend /app/backend
+RUN pip install -e /app/backend
+RUN chmod +x /app/backend/scripts/run.sh
 WORKDIR /app/backend
 RUN python3.11 -m pip install /app/backend
 EXPOSE 28100
-ENTRYPOINT ["tini", "--", "/app/backend/run.sh"]
+ENTRYPOINT ["tini", "--", "/app/backend/scripts/run.sh"]
 # CMD ["tail", "-f", "/dev/null"]

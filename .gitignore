@@ -10,3 +10,5 @@ sandbox
 .venv
 wandb
 ./backend/configs/local/
+*.egg-info
+datastore

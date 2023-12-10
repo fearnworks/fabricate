@@ -1,0 +1,12 @@
+fastapi
+pyyaml
+python-multipart
+uvicorn[standard]
+gunicorn
+watchdog
+rich
+loguru
+sqlalchemy
+python-dotenv
+tenacity
+pillow

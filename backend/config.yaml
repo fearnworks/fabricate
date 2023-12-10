@@ -1,5 +1,0 @@
-# config.yaml
-
-image_directory: '/data/ui_test/dndset_1/data'
-metadata_directory: '/data/ui_test'
-model_directory: '/data'

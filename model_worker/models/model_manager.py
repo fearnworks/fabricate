@@ -1,7 +1,6 @@
 """ This module manages the model and tokenizer. """
 import threading
-import torch
-from transformers import AutoModelForCausalLM, LlamaTokenizer
+
 from loguru import logger
 
 # Global variables to hold the model and tokenizer
@@ -11,6 +10,8 @@ model_loaded_event = threading.Event()
 
 def load_model():
     """ Load the model. """
+    import torch
+    from transformers import AutoModelForCausalLM, LlamaTokenizer
     global TOKENIZER, MODEL
     try:
         TOKENIZER = LlamaTokenizer.from_pretrained('lmsys/vicuna-7b-v1.5')
