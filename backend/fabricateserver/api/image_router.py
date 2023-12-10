@@ -28,17 +28,16 @@ async def upload_image(image: ImageModel):
     add_new_image(image)
     return {"message": f"Image {image.filename} uploaded and metadata saved with ID {image.uid}."}
 
-@router.patch("/update-image/{id}")
+@router.patch("/update-image/{uid}")
 async def update_image(uid: str, update_data: ImageModel):
     """Update metadata for an existing image."""
     existing_image = fetch_image(uid)
     if not existing_image:
         raise HTTPException(status_code=404, detail="Image not found")
-    update_data.id = uid
     save_metadata(update_data)
     return {"message": f"Image metadata updated for ID {uid}"}
 
-@router.delete("/delete-image/{id}")
+@router.delete("/delete-image/{uid}")
 async def delete_image(uid: str):
     """Delete an image file and its metadata."""
     delete_image_file(uid)
