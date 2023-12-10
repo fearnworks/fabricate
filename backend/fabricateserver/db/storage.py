@@ -13,6 +13,7 @@ def initialize_metadata_file():
     """Check if the metadata file exists, create it if it doesn't"""
     if not os.path.exists(metadata_file_path):
         # Create the metadata directory if it doesn't exist
+        logger.info("Metadata file not detected. Creating...")
         os.makedirs(os.path.dirname(metadata_file_path), exist_ok=True)
         # Create an empty file
         with open(metadata_file_path, 'w', encoding='utf-8') as file:

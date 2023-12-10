@@ -5,7 +5,7 @@ RUN --mount=type=cache,target=/var/cache/apt,id=apt \
     apt-get install --no-install-recommends -y git vim procps net-tools tini && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 # install simple http server for serving static content
-RUN npm install -g http-server
+RUN npm install -g http-server vite
 
 # make the 'app' folder the current working directory
 WORKDIR /app

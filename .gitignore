@@ -11,4 +11,4 @@ sandbox
 wandb
 ./backend/configs/local/
 *.egg-info
-datastore/*
+datastore
