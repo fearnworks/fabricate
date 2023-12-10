@@ -1,0 +1,1 @@
+python3.11 /code/backend/scripts/backend_pre_start.py

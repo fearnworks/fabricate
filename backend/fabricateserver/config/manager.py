@@ -22,7 +22,10 @@ def load_config(file_path: str = "/code/configs/local/config.yaml") -> Config:
         logger.error(f"Failed to load configuration: {e}")
         raise
 
-def save_config(config: Config, file_path: str = "/code/configs/local/config.yaml"):
+ 
+config = load_config()
+
+def save_config(new_config: Config, file_path: str = "/code/configs/local/config.yaml"):
     """This function saves the Config object to a YAML file.
 
     Args:
@@ -32,10 +35,9 @@ def save_config(config: Config, file_path: str = "/code/configs/local/config.yam
     """
     try:
         with open(file_path, "w", encoding="utf-8") as f:
-            yaml.dump(config.__dict__, f)
+            yaml.dump(new_config.__dict__, f)
         logger.info("Configuration saved successfully.")
+        config = new_config
     except Exception as e:
         logger.error(f"Failed to save configuration: {e}")
         raise
- 
-config = load_config()

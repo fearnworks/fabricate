@@ -2,7 +2,7 @@ import logging
 from dotenv import load_dotenv, find_dotenv
 from tenacity import after_log, before_log, retry, stop_after_attempt, wait_fixed
 from sqlalchemy import text
-from fabricateserver.session import SessionLocal
+from fabricateserver.db.session import SessionLocal
 from loguru import logger
 
 # Define the maximum number of tries and the wait time between tries

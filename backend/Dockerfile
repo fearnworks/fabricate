@@ -28,10 +28,10 @@ WORKDIR /app
 
 COPY --chown=appuser:appuser  ./backend /app/backend
 RUN pip install -e /app/backend
-RUN chmod +x /app/backend/run.sh
+RUN chmod +x /app/backend/scripts/run.sh
 USER appuser
 WORKDIR /app/backend
 RUN python3.11 -m pip install /app/backend
 EXPOSE 28100
-ENTRYPOINT ["tini", "--", "/app/backend/run.sh"]
+ENTRYPOINT ["tini", "--", "/app/backend/scripts/run.sh"]
 # CMD ["tail", "-f", "/dev/null"]
