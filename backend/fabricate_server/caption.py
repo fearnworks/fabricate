@@ -2,7 +2,7 @@
 
 from PIL import Image
 from loguru import logger
-from model_manager import get_model, get_tokenizer
+from fabricate_server.model_manager import get_model, get_tokenizer
 import torch
 
 

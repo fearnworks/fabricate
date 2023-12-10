@@ -3,7 +3,6 @@ It is responsible for creating the FastAPI application,
 including the routers, middleware, and event handlers. """
 
 import time
-import yaml
 from loguru import logger
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -14,10 +13,10 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from rich.console import Console
 from rich.logging import RichHandler
-import lifecycle
+import fabricate_server.lifecycle as lifecycle
 
-from config import load_config
-from image_router import router as image_router
+from fabricate_server.config import load_config
+from fabricate_server.image_router import router as image_router
 
 # Create a console instance
 console = Console()
@@ -55,7 +54,7 @@ app.add_middleware(
 )
 
 # Mount the static directory specified in the config file
-app.mount("/static", StaticFiles(directory=config["image_directory"]), name="static")
+app.mount("/static", StaticFiles(directory=config.image_directory), name="static")
 
 # Include the router from image_router.py
 app.include_router(image_router)

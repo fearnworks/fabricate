@@ -2,12 +2,12 @@
 import os
 import json
 from typing import List
-from models.image_model import ImageModel, ImageList
-from config import config
+from fabricate_server.models.image_model import ImageModel, ImageList
+from fabricate_server.config import config
 from loguru import logger
 
 # Define the path to the JSONL file where metadata will be stored
-metadata_file_path = os.path.join(config['metadata_directory'], 'images.jsonl')
+metadata_file_path = os.path.join(config.metadata_directory, 'images.jsonl')
 
 def initialize_metadata_file():
     """Check if the metadata file exists, create it if it doesn't"""
@@ -59,7 +59,7 @@ def delete_image_file(filename: str):
         for image in images:
             file.write(json.dumps(image.dict(), ensure_ascii=False) + '\n')
     # Also, delete the image file itself
-    image_path = os.path.join(config['image_directory'], filename)
+    image_path = os.path.join(config.image_directory, filename)
     if os.path.exists(image_path):
         os.remove(image_path)
 
@@ -73,7 +73,7 @@ def add_new_image(filename: str):
 
 def initialize_storage():
     """ Scan the image directory for new images and add them to the metadata file."""
-    image_directory = config['image_directory']
+    image_directory = config.image_directory
     # Load existing images from the storage file
     existing_images = {image.filename: image for image in read_images()}
     logger.info(f"Found {len(existing_images)} existing images in directory.")

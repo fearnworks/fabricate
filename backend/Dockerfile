@@ -18,14 +18,16 @@ RUN groupadd -r appuser && useradd --no-log-init -r -g appuser appuser
 RUN mkdir /app && \
     mkdir -p /home/appuser/.cache && \
     chown -R appuser:appuser /app /home/appuser
-COPY ./backend/requirements.txt /app/requirements.txt
+COPY ./backend/requirements/requirements.in /app/requirements.txt
 RUN --mount=type=cache,target=~/.cache/pip \
     python3.11 -m pip install -r /app/requirements.txt
+
 
 #Set working directory to /app
 WORKDIR /app
 
 COPY --chown=appuser:appuser  ./backend /app/backend
+RUN pip install -e /app/backend
 RUN chmod +x /app/backend/run.sh
 USER appuser
 WORKDIR /app/backend

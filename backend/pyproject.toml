@@ -8,7 +8,7 @@ requires = [
 
 [project]
 description = "Fabricate"
-name = "fabricate"
+name = "fabricate_server"
 version = "0.1"
 dynamic = ["dependencies", "optional-dependencies"]
 

@@ -1,7 +1,7 @@
 """ Application lifecycle events. """
 
 from loguru import logger
-from model_manager import start_model_loading
+from fabricate_server.model_manager import start_model_loading
 
 
 async def startup(load_model=False):

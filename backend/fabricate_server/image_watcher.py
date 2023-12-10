@@ -2,7 +2,7 @@
 import asyncio
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from storage import read_images
+from fabricate_server.storage import read_images
 
 class ImageDirectoryWatcher(FileSystemEventHandler):
     """ A class that watches the image directory for changes 
