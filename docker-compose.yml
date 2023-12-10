@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  cache:
+    image: redis
+    ports:
+      - 46379:46379
+    volumes:
+    - ./redis.conf:/usr/local/etc/redis/redis.conf
+    - /mnt/e/redis-data/fabricate:/data:rw
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - fabricate-network
+      
+  server: 
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    container_name: server
+    ports:
+      - 28100:28100
+    volumes:
+      - ./backend:/code
+      - /mnt/e/fabricate:/data:rw
+    env_file:
+      - .env
+    networks:
+      - fabricate-network
+    depends_on:
+      - cache
+
+  webui:
+    build:
+      context: .
+      dockerfile: ./webui/Dockerfile
+    container_name: webui
+    ports:
+      - 28101:28101
+      - 5173:5173
+    volumes:
+      - ./webui:/code
+    env_file:
+      - .env
+    networks:
+      - fabricate-network
+    depends_on:
+      - server
+networks:
+  fabricate-network:
+    external: true

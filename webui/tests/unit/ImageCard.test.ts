@@ -1,27 +1,38 @@
-// tests/ImageCard.test.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, fireEvent, screen } from '@testing-library/vue';
-import ImageCard from '@/components/ImageCard.vue' 
+// ImageCard.spec.ts
+import { describe, it, expect, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
+import ImageCard from '@/components/ImageCard.vue';
 
 describe('ImageCard', () => {
   it('emits delete event when delete button is clicked', async () => {
-    const { getByTestId, emitted } = render(ImageCard, {
+    // Create a mock for the handleUpdate method if it's used in the component
+    const handleUpdate = vi.fn();
+
+    // Mount the component with props
+    const wrapper = mount(ImageCard, {
       props: {
         filename: 'test-image.png',
         tags: [],
         notes: '',
         captions: '',
+        path: 'http://localhost:28100/static/test-image.png'
       },
+      // Provide mocks for any injected dependencies or global properties
+      global: {
+        mocks: {
+          handleUpdate
+        }
+      }
     });
 
-    const deleteButton = getByTestId('delete-button');
-    await fireEvent.click(deleteButton);
+    // Find the delete button by using the `find` method and the test id
+    const deleteButton = wrapper.find('[data-testid="delete-button"]');
 
-    // Check emitted event for delete
-    expect(emitted()).toHaveProperty('delete');
-    expect(emitted().delete[0]).toEqual(['test-image.png']);
+    // Trigger a click event on the delete button
+    await deleteButton.trigger('click');
+
+    // Assert that the delete event has been emitted with the correct payload
+    expect(wrapper.emitted()).toHaveProperty('delete');
+    expect(wrapper.emitted().delete[0]).toEqual(['test-image.png']);
   });
-
-  
 });
-

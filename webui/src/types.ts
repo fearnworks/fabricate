@@ -5,10 +5,11 @@ export interface ToastMethods {
    */
   showToast: (message: string) => void;
 }
-  
-export interface Image {
-    filename: string;
-    tags: string[];
-    notes: string;
-    captions: string;
+
+export interface DBImageData {
+  filename: string;
+  tags: string[];
+  notes: string;
+  captions: string;
+  path: string;
 }

@@ -39,18 +39,18 @@ It streamlines the process of sorting, labeling, and manipulating images, cateri
 - Extensibility: Designed for future feature additions or integration with other tools and services.
 
 ### Installation and Setup
+TBD : These are approximated instructions while the permanent mounting system is being developed. 
+
 ```bash
 # Clone the repository
-git clone [url]
+git clone https://github.com/fearnworks/fabricate
 
 # Navigate to the project directory
-cd fabricate-frontend
+cp .envtemplate .env 
+mkdir backend/configs/local
+cp backend/configs/config.example.yaml backend/configs/local/config.yaml # Update config file with your own values
 
-# Install dependencies
-npm install
-
-# Serve with hot reload at localhost:8080
-npm run serve
+bash ./setup.sh 
 ```
 
 ### Usage

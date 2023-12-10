@@ -1,9 +1,9 @@
 <template>
   <div @wheel="handleWheel" class="carousel-container">
     <Carousel ref="carousel" :itemsToShow="3" :mouseDrag="true" :touchDrag="true">
-      <Slide v-for="(image) in images" :key="image.filename">
-        <ImageCard :src="image.src" :filename="image.filename" :tags="image.tags" :notes="image.notes"
-          :captions="image.captions" @delete="$emit('delete-image', image.filename)" />
+      <Slide v-for="(image, index) in images" :key="index">
+        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes" :path="image.path"
+          :captions="image.captions" @delete="deleteImage(image.filename)" />
       </Slide>
     </Carousel>
     <div class="flex justify-center mt-4">
@@ -19,63 +19,53 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { Carousel, Slide } from 'vue3-carousel';
-import { ref, defineComponent, PropType, watch, onMounted } from 'vue';
 import ImageCard from './ImageCard.vue';
-import 'vue3-carousel/dist/carousel.css';
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { DBImageData } from '@/types'; // Replace with your actual type import
 
-interface Image {
-  src: string;
-  filename: string;
-  tags: string[];
-  notes: string;
-  captions: string;
-}
-
-export default defineComponent({
-  components: {
-    Carousel,
-    Slide,
-    ImageCard,
-  },
-  props: {
-    images: Array as PropType<Image[]>,
-  },
-  setup(props) {
-    const carouselRef = ref<InstanceType<typeof Carousel> | null>(null);
-    const isThrottled = ref(false);
-
-    const next = () => {
-      carouselRef.value?.next();
-    };
-
-    const prev = () => {
-      carouselRef.value?.prev();
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      if (!isThrottled.value) {
-        isThrottled.value = true;
-        setTimeout(() => (isThrottled.value = false), 200);
-        event.deltaY > 0 ? next() : prev();
-      }
-    };
-
-    watch(() => props.images, (newImages) => {
-      console.log('Received new images from parent:', newImages);
-    });
+const props = defineProps<{
+  images: DBImageData[]
+}>();
 
 
-    // Expose reactive data and methods for the template
-    return {
-      carouselRef,
-      isThrottled,
-      next,
-      prev,
-      handleWheel,
-    };
-  },
+const emit = defineEmits(['delete-image']);
+
+// const carouselRef = ref<InstanceType<typeof Carousel> | null>(null);
+const isThrottled = ref(false);
+
+const next = () => {
+  console.log("Next")
+};
+
+const prev = () => {
+  console.log("Prev")
+};
+
+const handleWheel = (event: WheelEvent) => {
+  if (!isThrottled.value) {
+    isThrottled.value = true;
+    setTimeout(() => (isThrottled.value = false), 200);
+    event.deltaY > 0 ? next() : prev();
+  }
+};
+
+watch(() => props.images, (newImages) => {
+  console.log('Received new images from parent:', newImages);
+});
+
+const deleteImage = (filename: string) => {
+  emit('delete-image', filename);
+};
+
+// Example of using lifecycle hooks in <script setup>
+onMounted(() => {
+  console.log('Carousel component mounted');
+});
+
+onBeforeUnmount(() => {
+  console.log('Carousel component about to unmount');
 });
 </script>
 

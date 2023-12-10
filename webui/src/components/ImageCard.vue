@@ -5,7 +5,8 @@
       data-testid="image-card">
       <!-- Image Container -->
       <div class="relative group w-1/2">
-        <img :src="get_src(filename)" alt="Image" class="object-cover rounded-2xl w-full h-auto" />
+        <img :src="path" alt="Image" class="object-cover rounded-2xl w-full h-auto" />
+
         <button
           class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl"
           @click="showZoomed = true">
@@ -58,24 +59,15 @@
   <div v-if="showZoomed" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 z-50"
     @click.self="showZoomed = false">
     <div class="modal-content" @click.stop>
-      <img :src="get_src(filename)" alt="Zoomed Image" class="max-w-full max-h-full" style="transform: scale(1);" />
+      <img :src="path" alt="Zoomed Image" class="max-w-full max-h-full" style="transform: scale(1);" />
     </div>
   </div>
 </template>
 
-  
-  
-  
 <script setup lang="ts">
 import { ref, watch, inject } from 'vue';
-import type { Image } from '@/types'; // Assuming Image type is defined in types.ts
-
-const props = defineProps({
-  filename: String,
-  tags: Array,
-  notes: String,
-  captions: String
-});
+import { DBImageData } from '@/types'; // Assuming Image type is defined in types.ts
+const props = defineProps<DBImageData>();
 
 const emit = defineEmits(['update', 'delete']);
 
@@ -84,39 +76,32 @@ const handleUpdate = inject('handleUpdate') as (filename: string, data: any) => 
 const editableFilename = ref(props.filename);
 const editableNotes = ref(props.notes);
 const editableCaptions = ref(props.captions);
+const path = ref(props.path);
 const showZoomed = ref(false);
-
-
-const zoomLevel = ref(1); // 1 is the initial zoom level (100%)
-
-const zoomIn = () => {
-  zoomLevel.value *= 1.2; // Increase zoom by 20%
-};
-
-const zoomOut = () => {
-  zoomLevel.value = Math.max(1, zoomLevel.value / 1.2); // Decrease zoom by 20%, but not less than 100%
-};
 
 watch(() => props.filename, (newVal) => editableFilename.value = newVal);
 watch(() => props.notes, (newVal) => editableNotes.value = newVal);
 watch(() => props.captions, (newVal) => editableCaptions.value = newVal);
 
 const emitUpdate = () => {
-  handleUpdate(editableFilename.value, {
-    filename: editableFilename.value,
-    notes: editableNotes.value,
-    captions: editableCaptions.value,
-    tags: props.tags
-  });
+  if (editableFilename.value) {
+    handleUpdate(editableFilename.value, {
+      filename: editableFilename.value,
+      notes: editableNotes.value,
+      captions: editableCaptions.value,
+      tags: props.tags
+    });
+  } else {
+    console.error('editableFilename.value is null');
+  }
 };
 
 const emitDelete = () => emit('delete', props.filename);
 
 const moveImage = () => console.log('Move image:', props.filename);
 
-const get_src = (filename: string) => `http://localhost:8000/static/${filename}`;
 </script>
-  
+
 
 <style scoped>
 /* Styles for ImageCard */

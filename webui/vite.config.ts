@@ -1,4 +1,5 @@
 // vite.config.ts
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import * as path from 'path';
@@ -11,10 +12,15 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    server: {
+        host: true,
+        port: 28100
+    },
     test: {
         // Test configuration here
         globals: true,
         environment: 'happy-dom',
+        setupFiles: ['./tests/setup.ts'], 
     },
     
 });

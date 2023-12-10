@@ -1,5 +1,3 @@
-// src/components/ImageReader.vue
-
 <template>
     <div class="bg-gray-100 min-h-screen">
         <!-- Top Bar -->
@@ -35,7 +33,6 @@
         <div v-else>
             <div v-if="isGridView" class="max-w-7xl mx-auto px-4 py-6">
                 <!-- Grid Component Here -->
-                Grid
                 <ImageGrid :images="images" @delete-image="handleDelete" @update-image="handleUpdate" />
             </div>
             <div v-else>
@@ -52,86 +49,67 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, inject, provide } from 'vue';
+import { ref, computed, onMounted, watch, provide } from 'vue';
 import ImageCarousel from './ImageCarousel.vue';
 import ImageGrid from './ImageGrid.vue';
 import ImageAPI from '../api/ImageAPI';
-import { ToastMethods, Image } from '../types';
+import {DBImageData } from '../types';
+import useToast from '@/composables/useToast';
 
-const images = ref<Image[]>([]);
+const toast = useToast();
+const images = ref<DBImageData[] >([]);
 const currentPage = ref(1);
-const imagesPerPage = ref(10);
-const socket = ref<WebSocket | null>(null);
-const showToast = inject<ToastMethods>('showToast') as ToastMethods['showToast'];
 const isGridView = ref(true); // State for toggling between grid and carousel
 const isLoading = ref(true);
-const totalPages = computed(() => Math.ceil(images.value.length / imagesPerPage.value));
 const viewMode = computed(() => (isGridView.value ? 'grid' : 'carousel'));
 
 const fetchImages = async () => {
     isLoading.value = true; 
-    const api = new ImageAPI('http://localhost:8000');
+    const api = new ImageAPI('http://localhost:28100');
     try {
         const fetchedImages = await api.fetchImages();
-        images.value = fetchedImages.images;
+        images.value = fetchedImages;
         console.log('Fetched images:', fetchedImages);
-        showToast('Fetched images successfully');
+        toast.showToast('Fetched images successfully');
         isLoading.value = false;  // Set isLoading to false after images are fetched
     } catch (error) {
         console.error('Error fetching images:', error);
-        showToast('Error fetching images');
+        toast.showToast('Error fetching images');
         isLoading.value = false;  // Also set isLoading to false in case of error
     }
 };
 
-// WebSocket connection to get real-time updates
-const connectWebSocket = () => {
-    socket.value = new WebSocket('ws://localhost:8000/ws');
-    socket.value.onmessage = (event: MessageEvent) => {
-        const data = JSON.parse(event.data);
-        if (Array.isArray(data.images)) {
-            images.value = data.images;
-            isLoading.value = false;
-        } else {
-            console.error('Received non-array images data:', data.images);
-        }
-    };
-    socket.value.onerror = (error: Event) => {
-        console.error(`WebSocket Error: ${error}`);
-    };
-};
-
 
 // Provide handleUpdate method to children components
-const handleUpdate = async (filename: string, updateData: Image) => {
-    const api = new ImageAPI('http://localhost:8000');
+const handleUpdate = async (filename: string, updateData: DBImageData) => {
+    const api = new ImageAPI('http://localhost:28100');
     console.log('Updating image:', filename, updateData);
     try {
         await api.updateImage(filename, updateData);
-        showToast('Image updated successfully');
+        toast.showToast('Image updated successfully');
         await fetchImages(); // Re-fetch images to update the list
     } catch (error) {
         console.error('Error updating image:', error);
-        showToast('Error updating image');
+        toast.showToast('Error updating image');
     }
 };
 
-
 const handleDelete = async (filename: string) => {
-    const api = new ImageAPI('http://localhost:8000');
+    const api = new ImageAPI('http://localhost:28100');
     try {
         await api.deleteImage(filename);
         images.value = images.value.filter((image) => image.filename !== filename);
-        showToast?.('Image deleted successfully');
+        toast.showToast?.('Image deleted successfully');
     } catch (error: any) {
         console.error('Error deleting image:', error);
-        showToast?.('Error deleting image');
+        toast.showToast?.('Error deleting image');
     }
 };
 
+
 onMounted(() => {
     fetchImages();
-    connectWebSocket();
+    // connectWebSocket();
 });
 
 watch(currentPage, (newPage) => {
@@ -142,7 +120,6 @@ const toggleViewMode = () => {
     isGridView.value = !isGridView.value;
 };
 
-provide('showToast', showToast);
 provide('handleUpdate', handleUpdate);
 
 </script>

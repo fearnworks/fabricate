@@ -1,4 +1,6 @@
-# backend/main.py
+""" This is the main file for the backend API. 
+It is responsible for creating the FastAPI application, 
+including the routers, middleware, and event handlers. """
 
 import time
 import yaml
@@ -12,9 +14,8 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from rich.console import Console
 from rich.logging import RichHandler
-import lifecycle as lifecycle
+import lifecycle
 
-import argparse 
 from config import load_config
 from image_router import router as image_router
 
@@ -24,21 +25,18 @@ console = Console()
 logger.remove()
 logger.add(RichHandler())
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Fabricate AI Driver Synthetic Data Management")
-    parser.add_argument("--config", type=str, default="./configs/local/config.yaml", help="Path to the configuration file")
-    
-    return parser.parse_args()# Load configuration
-with open("config.yaml", "r") as f:
-    config = yaml.safe_load(f)
-    
-app = FastAPI(title="AI Driver API")
+config = load_config()
+
+
+app = FastAPI(title="Fabricate API")
 
 origins = ["*"]
 
 
 class LogMiddleware(BaseHTTPMiddleware):
+    """ Middleware to log all incoming requests. """
     async def dispatch(self, request: Request, call_next):
+        """ Log all incoming requests. """
         if hasattr(request.state, "body"):
             body_json = request.state.body
         else:
@@ -55,7 +53,6 @@ app.add_middleware(
     allow_methods=["*"],  # This allows all methods, including DELETE
     allow_headers=["*"],
 )
-args = parse_arguments()
 
 # Mount the static directory specified in the config file
 app.mount("/static", StaticFiles(directory=config["image_directory"]), name="static")
@@ -65,6 +62,7 @@ app.include_router(image_router)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """ Exception handler for validation errors. """
     return JSONResponse(
         status_code=400,
         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
@@ -72,6 +70,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.middleware("http")
 async def log_request(request: Request, call_next):
+    """ Middleware to log all incoming requests. """
     logger.info(f"Incoming request: {request.method} {request.url}")
     response = await call_next(request)
     return response
@@ -100,8 +99,3 @@ async def add_process_time_header(request: Request, call_next):
 logger.info("Routers have been included in the application")
 app.add_event_handler("startup", lifecycle.startup)
 app.add_event_handler("shutdown", lifecycle.shutdown)
-if __name__ == "__main__":
-    import uvicorn
-
-    logger.info("Starting server")
-    uvicorn.run(app, host="0.0.0.0", port=8000)

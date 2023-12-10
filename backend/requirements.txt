@@ -2,6 +2,7 @@ fastapi
 pyyaml
 python-multipart
 uvicorn[standard]
+gunicorn
 watchdog
 rich
 loguru
@@ -11,3 +12,6 @@ xformers>=0.0.22
 torch
 torchvision
 accelerate
+tenacity
+sqlalchemy
+python-dotenv
