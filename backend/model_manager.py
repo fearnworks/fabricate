@@ -1,20 +1,20 @@
-# model_manager.py
-
+""" This module manages the model and tokenizer. """
+import threading
 import torch
 from transformers import AutoModelForCausalLM, LlamaTokenizer
-import threading
 from loguru import logger
 
 # Global variables to hold the model and tokenizer
-model = None
-tokenizer = None
+MODEL = None
+TOKENIZER = None
 model_loaded_event = threading.Event()
 
 def load_model():
-    global tokenizer, model
+    """ Load the model. """
+    global TOKENIZER, MODEL
     try:
-        tokenizer = LlamaTokenizer.from_pretrained('lmsys/vicuna-7b-v1.5')
-        model = AutoModelForCausalLM.from_pretrained(
+        TOKENIZER = LlamaTokenizer.from_pretrained('lmsys/vicuna-7b-v1.5')
+        MODEL = AutoModelForCausalLM.from_pretrained(
             'THUDM/cogvlm-chat-hf',
             torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True,
@@ -26,21 +26,26 @@ def load_model():
         logger.error(f"Error loading model: {e}")
 
 def is_model_loaded():
+    """ Check if the model is loaded. """
     return model_loaded_event.is_set()
 
 def get_model():
+    """ Get the model. """
     if not is_model_loaded():
         raise RuntimeError("Model is not loaded yet.")
-    return model
+    return MODEL
 
 def get_tokenizer():
-    return tokenizer
+    """ Get the tokenizer. """
+    return TOKENIZER
 
 def start_model_loading():
+    """ Start loading the model in a separate thread. """
     global model_loader_thread
     model_loader_thread = threading.Thread(target=load_model, daemon=True)
     model_loader_thread.start()
 
 def await_model_loading():
+    """ Wait for the model to be loaded. """
     global model_loader_thread
     model_loader_thread.join()

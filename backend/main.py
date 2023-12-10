@@ -1,4 +1,6 @@
-# backend/main.py
+""" This is the main file for the backend API. 
+It is responsible for creating the FastAPI application, 
+including the routers, middleware, and event handlers. """
 
 import time
 import yaml
@@ -12,7 +14,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from rich.console import Console
 from rich.logging import RichHandler
-import lifecycle as lifecycle
+import lifecycle
 
 from config import load_config
 from image_router import router as image_router
@@ -25,14 +27,16 @@ logger.add(RichHandler())
 
 config = load_config()
 
-    
+
 app = FastAPI(title="Fabricate API")
 
 origins = ["*"]
 
 
 class LogMiddleware(BaseHTTPMiddleware):
+    """ Middleware to log all incoming requests. """
     async def dispatch(self, request: Request, call_next):
+        """ Log all incoming requests. """
         if hasattr(request.state, "body"):
             body_json = request.state.body
         else:
@@ -58,6 +62,7 @@ app.include_router(image_router)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """ Exception handler for validation errors. """
     return JSONResponse(
         status_code=400,
         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
@@ -65,6 +70,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.middleware("http")
 async def log_request(request: Request, call_next):
+    """ Middleware to log all incoming requests. """
     logger.info(f"Incoming request: {request.method} {request.url}")
     response = await call_next(request)
     return response
