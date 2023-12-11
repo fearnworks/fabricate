@@ -3,4 +3,3 @@ PORT=28100
 UI_PORT=28101
 APP_MODULE=fabricateserver.main:app
 TIMEOUT=120
-SERVER_URL=localhost

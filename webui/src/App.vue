@@ -8,20 +8,20 @@
 
 <script lang="ts">
 import { defineComponent, provide } from 'vue';
-import ImageReader from './components/ImageReader.vue';
+import { useImageStore } from './stores/image_store';
 import ToastComponent from './components/ToastComponent.vue';
 import useToast from '@/composables/useToast'; 
 import Layout from '@/components/Layout.vue';
 export default defineComponent({
   name: 'App',
   components: {
-    ImageReader,
     Layout,
     ToastComponent
   },
   setup() {
     const { showToast } = useToast();
-
+    const image_store = useImageStore()
+    console.log(image_store)
     // Provide the showToast method to all child components
     provide('showToast', showToast);
   }

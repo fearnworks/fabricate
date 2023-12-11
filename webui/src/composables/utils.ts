@@ -1,8 +1,7 @@
 
 
 export default function getSrc(filename: string): string {
-    const base = process.env.SERVER_URL
-    const server = `http://${base}:28100`;
+    const server = `http://${import.meta.env.VITE_SERVER_URL}:28100`;
     
     return `${server}/static/${filename}`;
 }

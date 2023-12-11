@@ -4,8 +4,7 @@ import ImageAPI from '@/api/ImageAPI';
 import { DBImageData } from '@/types';
 
 export const useImageStore = defineStore('imageStore', () => {
-    const base = process.env.SERVER_URL
-    const server = `http://${base}:28100`;
+    const server = `http://${import.meta.env.VITE_SERVER_URL}:28100`;
     const images = ref<DBImageData[]>([]);
     // const isLoading = ref(false); // Uncomment if you want to track loading state
 
@@ -47,7 +46,7 @@ export const useImageStore = defineStore('imageStore', () => {
     const getImageByUid = (uid: string) => {
         return images.value.find(image => image.uid === uid);
     };
-
+    fetchImages()
     // Return the state and actions
     return {
         images,
