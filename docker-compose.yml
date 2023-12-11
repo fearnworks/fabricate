@@ -1,16 +1,16 @@
 version: "3"
 
 services:
-  cache:
-    image: redis
-    ports:
-      - 46379:46379
-    volumes:
-    - ./redis.conf:/usr/local/etc/redis/redis.conf
-    - ./datastore/redis-data/fabricate:/data:rw
-    command: redis-server /usr/local/etc/redis/redis.conf
-    networks:
-      - fabricate-network
+  # cache:
+  #   image: redis
+  #   ports:
+  #     - 46379:46379
+  #   volumes:
+  #   - ./redis.conf:/usr/local/etc/redis/redis.conf
+  #   - ./datastore/redis-data/fabricate:/data:rw
+  #   command: redis-server /usr/local/etc/redis/redis.conf
+  #   networks:
+  #     - fabricate-network
       
   server: 
     build:
@@ -27,7 +27,7 @@ services:
     networks:
       - fabricate-network
     depends_on:
-      - cache
+      # - cache
       - db
   webui:
     build:
