@@ -21,7 +21,7 @@ services:
       - 28100:28100
     volumes:
       - ./backend:/code
-      - ./datastore:/data:rw
+      - ./datastore:/datastore:rw
     env_file:
       - .env
     networks:
@@ -39,7 +39,7 @@ services:
       - 5173:5173
     volumes:
       - ./webui:/code
-      - ./datastore:/data:rw
+      - ./datastore:/datastore:rw
     env_file:
       - .env
     networks:
@@ -51,7 +51,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongodata:/data/db:rw
+      - mongodata:/datastore/db:rw
     networks:
       - fabricate-network
 networks:
