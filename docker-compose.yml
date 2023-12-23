@@ -51,9 +51,12 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./datastore/mongo-data:/data/db:rw
+      - mongodata:/data/db:rw
     networks:
       - fabricate-network
 networks:
   fabricate-network:
     external: true
+  
+volumes: 
+  mongodata:
