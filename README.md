@@ -49,13 +49,27 @@ git clone https://github.com/fearnworks/fabricate
 cp .envtemplate .env 
 mkdir backend/configs/local
 cp backend/configs/config.example.yaml backend/configs/local/config.yaml # Update config file with your own values
-ln -s YOURDATASTOREPATH ./datastore
 cd webui
 npm install 
 cd ..
-
 bash ./setup.sh 
 ```
+
+### Datastore Set up 
+
+```bash 
+## Symbolic link
+ln -s YOURDATASTOREPATH ./datastore
+## Use local directory
+cp ./example_data ./datastore
+``` 
+
+### Run with Docker Compose (preferred)
+This project is primarily tested utilizing docker containers. Perform the prior steps and the cd to the root of the project.
+
+```bash
+docker compose up 
+``` 
 
 ### Usage
 - Navigate through the image dataset using the carousel component.

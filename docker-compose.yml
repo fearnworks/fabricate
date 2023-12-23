@@ -1,16 +1,16 @@
 version: "3"
 
 services:
-  cache:
-    image: redis
-    ports:
-      - 46379:46379
-    volumes:
-    - ./redis.conf:/usr/local/etc/redis/redis.conf
-    - ./datastore/redis-data/fabricate:/data:rw
-    command: redis-server /usr/local/etc/redis/redis.conf
-    networks:
-      - fabricate-network
+  # cache:
+  #   image: redis
+  #   ports:
+  #     - 46379:46379
+  #   volumes:
+  #   - ./redis.conf:/usr/local/etc/redis/redis.conf
+  #   - ./datastore/redis-data/fabricate:/data:rw
+  #   command: redis-server /usr/local/etc/redis/redis.conf
+  #   networks:
+  #     - fabricate-network
       
   server: 
     build:
@@ -21,14 +21,14 @@ services:
       - 28100:28100
     volumes:
       - ./backend:/code
-      - ./datastore:/data:rw
+      - ./datastore:/datastore:rw
     env_file:
       - .env
     networks:
       - fabricate-network
     depends_on:
-      - cache
-
+      # - cache
+      - db
   webui:
     build:
       context: .
@@ -39,13 +39,24 @@ services:
       - 5173:5173
     volumes:
       - ./webui:/code
-      - ./datastore:/data:rw
+      - ./datastore:/datastore:rw
     env_file:
       - .env
     networks:
       - fabricate-network
     depends_on:
       - server
+  db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/datastore/db:rw
+    networks:
+      - fabricate-network
 networks:
   fabricate-network:
     external: true
+  
+volumes: 
+  mongodata:

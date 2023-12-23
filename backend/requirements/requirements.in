@@ -10,3 +10,4 @@ sqlalchemy
 python-dotenv
 tenacity
 pillow
+pymongo

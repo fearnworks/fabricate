@@ -1,5 +1,5 @@
 # config.yaml
 
-image_directory: '/data'
-metadata_directory: '/data'
-model_directory: '/data'
+image_directory: '/datastore'
+metadata_directory: '/datastore'
+model_directory: '/datastore'

@@ -7,7 +7,7 @@
                     <!-- Modal content goes here -->
                     <div class="p-6">
                         <!-- ImageCard component -->
-                        <ImageCard :filename="image.filename" :tags="image.tags" :notes="image.notes" :path="image.path"
+                        <ImageCard :uid="image.uid" :filename="image.filename" :tags="image.tags" :notes="image.notes" :path="image.path"
                             :captions="image.captions" @delete="handleDelete" @update="handleUpdate" />
                         <!-- Close button -->
                         <button @click="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-300">

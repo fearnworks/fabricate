@@ -1,8 +1,12 @@
 <template>
     <div class="grid-container">
-        <div v-for="(image, index) in images" :key="index">
-            <img :src="image.path" :alt="image.path" @click="showModal(image)" :data-testid="`image-${index}`" />
-        </div>
+        <q-card v-for="(image, index) in images" :key="index">
+            <router-link :to="`/images/${image.uid}`">
+                <q-img :src="image.path" :alt="image.path" :data-testid="`image-${index}`">
+
+                </q-img>
+            </router-link>
+        </q-card>
         <ImageModal v-if="selectedImage" :image="selectedImage" @close="selectedImage = null" />
     </div>
 </template>
@@ -17,10 +21,6 @@ defineProps<{
 }>();
 
 const selectedImage = ref<DBImageData | null>(null);
-
-function showModal(image: DBImageData) {
-    selectedImage.value = image;
-}
 </script>
   
 <style>
@@ -31,9 +31,14 @@ function showModal(image: DBImageData) {
     padding: 16px;
 }
 
-.grid-item img {
-    width: 100%;
+.grid-item {
     cursor: pointer;
+}
+
+.grid-item .q-img {
     border-radius: 8px;
+    width: 100%;
+    height: auto;
+    /* Adjust height as needed */
 }
 </style>

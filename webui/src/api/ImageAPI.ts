@@ -5,8 +5,8 @@ import getSrc from '@/composables/utils';
 
 interface ImageAPIInterface {
   fetchImages: () => Promise<DBImageData[]>;
-  deleteImage: (filename: string) => Promise<void>;
-  updateImage: (filename: string, updateData: DBImageData) => Promise<void>;
+  deleteImage: (uid: string) => Promise<void>;
+  updateImage: (uid: string, updateData: DBImageData) => Promise<void>;
 }
 
 class ImageAPI implements ImageAPIInterface {
@@ -28,12 +28,12 @@ class ImageAPI implements ImageAPIInterface {
     return imageList;
   }
 
-  async deleteImage(filename: string): Promise<void> {
-    await this.axiosInstance.delete(`/delete-image/${filename}`);
+  async deleteImage(uid: string): Promise<void> {
+    await this.axiosInstance.delete(`/delete-image/${uid}`);
   }
 
-  async updateImage(filename: string, updateData: DBImageData): Promise<void> {
-    await this.axiosInstance.patch(`/update-image/${filename}`, updateData);
+  async updateImage(uid: string, updateData: DBImageData): Promise<void> {
+    await this.axiosInstance.patch(`/update-image/${uid}`, updateData);
   }
 
   // Further methods can be added as needed
